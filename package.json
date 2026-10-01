@@ -1,0 +1,37 @@
+{
+  "name": "jira-to-markdown",
+  "version": "1.0.0",
+  "description": "A Node.js tool to fetch Jira tickets and save them in clean Markdown format with metadata, comments, subtasks, and attachments.",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "jira-to-md": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "server": "node src/server.js",
+    "web": "node src/server.js",
+    "fetch": "node src/index.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "jira",
+    "markdown",
+    "atlassian",
+    "tickets",
+    "export"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "marked": "^18.0.13",
+    "ora": "^8.1.0",
+    "prompts": "^2.4.2",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2"
+  }
+}
