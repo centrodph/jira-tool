@@ -16,6 +16,7 @@ A Node.js tool to fetch tickets from Jira Cloud and export them into clean GitHu
   - Search tickets using **JQL**.
   - Run interactively with zero arguments for guided prompts.
 - **Web UI**: Built-in dashboard to fetch tickets, browse saved exports, and preview rendered HTML or raw Markdown.
+- **Repository status**: Live Bitbucket pull-request board for a watched set of repositories, including review state and the latest pipeline result.
 
 ---
 
@@ -67,6 +68,17 @@ Open **`http://localhost:3099`** in your browser to:
 - Browse and search saved tickets in the sidebar.
 - Toggle between live HTML preview and raw Markdown.
 - Delete or manage saved tickets.
+
+Open **`http://localhost:3099/repositories`** for the live pull-request board. It lists open pull requests for the repositories in `REPOSITORIES`, limited to authors in `BITBUCKET_USERS`. Review state and the newest Bitbucket Pipeline are included, and the page refreshes every 30 seconds.
+
+Open **`http://localhost:3099/activity`** for the developer activity dashboard. It presents:
+- An interactive **Pie Chart** showing pull requests distributed by repository with percentage share.
+- A **Repository Breakdown** table with columns for `Repository`, `PRs`, `Lines +`, `Lines -`, and `Commits`.
+- Sub-tabs for **Pull Requests** (filtered by status and search) and **Commits** (with short hash and direct links).
+- Configurable time ranges (7d, 15d, 30d, 60d) and repository filtering via the sidebar.
+- Seamless navigation by clicking on any author name or user badge in the pull-request board.
+
+`REPOSITORIES` is a comma-separated list of repository slugs. `BITBUCKET_USERS` is a comma-separated list of emails or display names. An email is matched to the Bitbucket author display name and, when Jira can resolve it, to the shared Atlassian account id. The board needs an API token with the Bitbucket scopes `read:repository:bitbucket`, `read:pullrequest:bitbucket`, and `read:pipeline:bitbucket`, set as `BITBUCKET_API_TOKEN`. Restart the server after changing `.env`.
 
 ---
 

@@ -114,6 +114,25 @@ export class JiraClient {
   }
 
   /**
+   * Finds Atlassian accounts by email or display name.
+   * The result is used to match Bitbucket pull request authors, who often
+   * share the same account id but do not include an email address.
+   * @param {string} query
+   * @returns {Promise<object[]>}
+   */
+  async searchUsers(query) {
+    const trimmedQuery = String(query || '').trim();
+    if (!trimmedQuery) return [];
+
+    const parameters = new URLSearchParams({
+      query: trimmedQuery,
+      maxResults: '10',
+    });
+    const data = await this.request(`/rest/api/3/user/search?${parameters.toString()}`);
+    return Array.isArray(data) ? data : [];
+  }
+
+  /**
    * Download an attachment file from Jira
    */
   async downloadAttachment(attachmentUrl, destinationPath) {

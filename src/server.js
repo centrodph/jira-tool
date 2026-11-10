@@ -6,6 +6,7 @@ import { getConfig } from './config.js';
 import { JiraClient } from './jiraClient.js';
 import { formatIssueToMarkdown } from './markdownFormatter.js';
 import { saveIssueToMarkdownFile } from './fileWriter.js';
+import { registerBitbucketRoutes } from './bitbucketRoutes.js';
 
 const app = express();
 const config = getConfig();
@@ -15,6 +16,7 @@ const PORT = process.env.PORT || 3099;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+registerBitbucketRoutes(app);
 
 // Serve static tickets folder (for attachments and direct access)
 app.use('/tickets', express.static(config.outputDir));
@@ -247,6 +249,20 @@ app.get('/', (req, res) => {
       padding: 0.35rem 0.75rem;
       border-radius: 6px;
       border: 1px solid var(--border-color);
+    }
+    .app-nav { display: flex; gap: 0.35rem; }
+    .app-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+    }
+    .app-nav a:hover,
+    .app-nav a.active {
+      color: var(--text-main);
+      background: var(--bg-primary);
     }
 
     .app-container {
@@ -522,6 +538,11 @@ app.get('/', (req, res) => {
       <i class="fa-solid fa-file-lines"></i>
       <span>Jira Ticket Markdown Manager</span>
     </div>
+    <nav class="app-nav" aria-label="Application">
+      <a href="/" class="active" aria-current="page">Tickets</a>
+      <a href="/repositories">Pull requests</a>
+      <a href="/activity">User Activity</a>
+    </nav>
     <div class="jira-url">
       <i class="fa-solid fa-link"></i> ${config.baseUrl}
     </div>
@@ -784,5 +805,13 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`\n🚀 Jira Markdown Web Application is running!`);
-  console.log(`👉 Open in your browser: http://localhost:${PORT}\n`);
+  console.log(`👉 Open in your browser: http://localhost:${PORT}`);
+  console.log(`👉 Repository status: http://localhost:${PORT}/repositories\n`);
+}).on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Stop the other process or choose a different PORT.`);
+    process.exit(1);
+  }
+  console.error('The web server failed to start.', error);
+  process.exit(1);
 });
