@@ -60,6 +60,8 @@ export function renderActivityPage(page) {
       <a href="/">Tickets</a>
       <a href="/repositories">Pull requests</a>
       <a href="/activity" class="is-active" aria-current="page">User Activity</a>
+      <a href="/reports">Team Reports</a>
+      <a href="/releases">Releases</a>
     </nav>
     <div class="topbar-status">
       <button id="refresh-button" class="button button-quiet" type="button">Refresh</button>
@@ -103,6 +105,10 @@ export function renderActivityPage(page) {
           <h2 id="activity-user-heading">Select a user</h2>
         </div>
         <div class="content-actions">
+          <a class="button button-quiet" href="/reports" title="Ver reporte comparativo de rendimiento del equipo">
+            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+            <span>Team Reports</span>
+          </a>
           <div class="days-selector" role="group" aria-label="Time range">
             <button type="button" data-days="7">7d</button>
             <button type="button" data-days="15">15d</button>

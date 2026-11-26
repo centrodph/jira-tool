@@ -1,0 +1,1720 @@
+{
+  "id": "report-2026-11-19T12-06-03",
+  "title": "Team Performance Report · Últimos 30 días",
+  "createdAt": "2026-11-19T12:06:03.448Z",
+  "formattedDate": "19/11/2026 09:06",
+  "period": {
+    "days": 30,
+    "from": "20/10/2026",
+    "to": "19/11/2026",
+    "cutoffIso": "2026-10-20T12:06:03.448Z"
+  },
+  "teamSummary": {
+    "memberCount": 7,
+    "totalResolved": 100,
+    "avgResolvedPerMember": 14.3,
+    "resolvedByType": {
+      "story": 30,
+      "bug": 10,
+      "task": 60,
+      "other": 0
+    },
+    "totalInProgressHours": 9464.2,
+    "avgInProgressHours": 94.6,
+    "avgInProgressFormatted": "3.9 d (95 h)",
+    "totalQaBounces": 17,
+    "teamQaBounceRatePct": 15,
+    "totalCurrentWip": 6,
+    "totalPrsCreated": 180,
+    "totalPrsMerged": 147,
+    "totalPrsReviewed": 182,
+    "totalCommits": 401,
+    "totalLinesAdded": 0,
+    "totalLinesRemoved": 0,
+    "netLines": 0
+  },
+  "members": [
+    {
+      "identifier": "leonardo.alifraco@intive.com",
+      "displayName": "Leonardo Alifraco",
+      "email": "leonardo.alifraco@intive.com",
+      "jira": {
+        "resolvedCount": 28,
+        "resolvedByType": {
+          "story": 9,
+          "bug": 1,
+          "task": 18,
+          "other": 0
+        },
+        "totalInProgressHours": 180.00000000000003,
+        "avgInProgressHoursPerTicket": 6.4,
+        "totalInProgressFormatted": "7.5 d (180 h)",
+        "avgInProgressFormatted": "6.4 h",
+        "qaBouncesCount": 0,
+        "ticketsPassedThroughQA": 13,
+        "qaBounceRatePct": 0,
+        "currentWipCount": 1,
+        "resolvedTickets": [
+          {
+            "key": "CS-582",
+            "summary": "Enterprise SSO blocked for Cognito-only users",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-17T15:17:52.444-0500",
+            "inProgressHours": 1,
+            "inProgressFormatted": "1.0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-582"
+          },
+          {
+            "key": "SCRP-37863",
+            "summary": "CRR and HTTPS for GCH production brand public S3 bucket",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-15T13:35:22.123-0500",
+            "inProgressHours": 45.9,
+            "inProgressFormatted": "1.9 d (46 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37863"
+          },
+          {
+            "key": "SCRP-37521",
+            "summary": "Isolate Brand Client access with Db Provider",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-13T08:27:11.581-0500",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37521"
+          },
+          {
+            "key": "SCRP-37563",
+            "summary": "Notify subscribed platforms when a brand is updated",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T12:36:50.090-0500",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37563"
+          },
+          {
+            "key": "SCRP-37506",
+            "summary": "Add X-Content-Type-Options on production app CloudFront distributions",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T14:17:24.657-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37506"
+          },
+          {
+            "key": "SCRP-37505",
+            "summary": "Add X-Content-Type-Options on nonprod app CloudFront distributions",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T14:05:44.015-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37505"
+          },
+          {
+            "key": "SCRP-37504",
+            "summary": "Add Missing security header: Strict-Transport-Security",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T12:31:14.661-0400",
+            "inProgressHours": 1.8,
+            "inProgressFormatted": "1.8 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37504"
+          },
+          {
+            "key": "SCRP-37544",
+            "summary": "Transition to CONFIRM_FOR_REVETTING when brand is updated",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-30T13:36:53.841-0400",
+            "inProgressHours": 0.5,
+            "inProgressFormatted": "30 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37544"
+          },
+          {
+            "key": "SCRP-37568",
+            "summary": "set session.upload_progress.enabled=0 for scr-public-website",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-23T09:39:51.499-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37568"
+          },
+          {
+            "key": "SCRP-37447",
+            "summary": "Configure DDOS protection (WAF + Shield Advanced) for UBID Keyfactor CDN",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-29T11:06:37.255-0400",
+            "inProgressHours": 0.3,
+            "inProgressFormatted": "18 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37447"
+          },
+          {
+            "key": "SCRP-37127",
+            "summary": "Integrate Brand Service for Vetting Submission",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-29T10:13:36.743-0400",
+            "inProgressHours": 23,
+            "inProgressFormatted": "23.0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37127"
+          },
+          {
+            "key": "SCRP-37529",
+            "summary": "UBID UAT",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T14:05:28.402-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37529"
+          },
+          {
+            "key": "SCRP-37526",
+            "summary": "SCR UAT",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T14:05:25.683-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37526"
+          },
+          {
+            "key": "SCRP-37528",
+            "summary": "UBID Staging / Staging-2",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T14:02:11.339-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37528"
+          },
+          {
+            "key": "SCRP-37527",
+            "summary": "UBID Dev",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T14:02:08.645-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37527"
+          },
+          {
+            "key": "SCRP-37525",
+            "summary": "SCR Staging / Staging-2",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T14:02:04.988-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37525"
+          },
+          {
+            "key": "SCRP-37524",
+            "summary": "SCR Dev",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T14:02:01.508-0400",
+            "inProgressHours": 0.9,
+            "inProgressFormatted": "54 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37524"
+          },
+          {
+            "key": "SCRP-37512",
+            "summary": "RBM All",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T12:31:12.415-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37512"
+          },
+          {
+            "key": "SCRP-37510",
+            "summary": "SCR Production",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T10:44:35.048-0400",
+            "inProgressHours": 0.3,
+            "inProgressFormatted": "18 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37510"
+          },
+          {
+            "key": "SCRP-37513",
+            "summary": "UBID Production",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T10:29:15.540-0400",
+            "inProgressHours": 0.2,
+            "inProgressFormatted": "12 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37513"
+          },
+          {
+            "key": "SCRP-37511",
+            "summary": "UBID Non-Production",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T10:14:42.710-0400",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37511"
+          },
+          {
+            "key": "SCRP-37509",
+            "summary": "SCR Non-Production",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T10:11:46.798-0400",
+            "inProgressHours": 0.3,
+            "inProgressFormatted": "18 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37509"
+          },
+          {
+            "key": "SCRP-37363",
+            "summary": "[SCR] Map partnerTypes to and from Brand Service",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T10:03:08.011-0400",
+            "inProgressHours": 72.1,
+            "inProgressFormatted": "3.0 d (72 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37363"
+          },
+          {
+            "key": "SCRP-37369",
+            "summary": "[SCR] Base: Implement create / update / delete on the Brand Service provider",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T10:03:03.744-0400",
+            "inProgressHours": 6.3,
+            "inProgressFormatted": "6.3 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37369"
+          },
+          {
+            "key": "SCRP-37076",
+            "summary": "Integrate Brand Service for Brand Restriction",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T10:02:44.592-0400",
+            "inProgressHours": 0.5,
+            "inProgressFormatted": "30 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37076"
+          },
+          {
+            "key": "SCRP-37075",
+            "summary": "Integrate Brand Service for Brand Client Archival",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-28T10:02:40.258-0400",
+            "inProgressHours": 24.5,
+            "inProgressFormatted": "1.0 d (25 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37075"
+          },
+          {
+            "key": "SCRP-37366",
+            "summary": "[BS] Expose physical address on brand create/update/detail",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-26T09:57:32.115-0400",
+            "inProgressHours": 2,
+            "inProgressFormatted": "2.0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37366"
+          },
+          {
+            "key": "SCRP-37415",
+            "summary": "legalEntityType as LegalEntityType enum",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-23T14:58:55.905-0400",
+            "inProgressHours": 0.4,
+            "inProgressFormatted": "24 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37415"
+          }
+        ],
+        "bouncedTickets": []
+      },
+      "bitbucket": {
+        "prsCreated": 13,
+        "prsMerged": 9,
+        "prsDeclined": 0,
+        "prsReviewed": 15,
+        "commits": 74,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": [
+        {
+          "label": "Top Resolver",
+          "icon": "fa-trophy",
+          "type": "gold"
+        },
+        {
+          "label": "Cero Rebotes QA",
+          "icon": "fa-shield-halved",
+          "type": "green"
+        },
+        {
+          "label": "Ciclo Rápido",
+          "icon": "fa-bolt",
+          "type": "yellow"
+        }
+      ]
+    },
+    {
+      "identifier": "gerardo.perrucci.ext@intive.com",
+      "displayName": "Gerardo Perrucci",
+      "email": "gerardo.perrucci.ext@intive.com",
+      "jira": {
+        "resolvedCount": 17,
+        "resolvedByType": {
+          "story": 7,
+          "bug": 2,
+          "task": 8,
+          "other": 0
+        },
+        "totalInProgressHours": 1538.1000000000001,
+        "avgInProgressHoursPerTicket": 90.5,
+        "totalInProgressFormatted": "64.1 d (1538 h)",
+        "avgInProgressFormatted": "3.8 d (91 h)",
+        "qaBouncesCount": 0,
+        "ticketsPassedThroughQA": 22,
+        "qaBounceRatePct": 0,
+        "currentWipCount": 1,
+        "resolvedTickets": [
+          {
+            "key": "CS-565",
+            "summary": "[BUG] Short Codes list and table fail to load",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-13T15:26:16.978-0500",
+            "inProgressHours": 2.5,
+            "inProgressFormatted": "2.5 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-565"
+          },
+          {
+            "key": "CS-478",
+            "summary": "Update golden Image to node 24 AccountService/BrandService",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-10T08:39:35.110-0500",
+            "inProgressHours": 19.1,
+            "inProgressFormatted": "19.1 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-478"
+          },
+          {
+            "key": "CS-558",
+            "summary": "Rollback https://bitbucket.org/gchtech/gch-account-service/pull-requests/446",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-12T08:30:12.288-0500",
+            "inProgressHours": 41.2,
+            "inProgressFormatted": "1.7 d (41 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-558"
+          },
+          {
+            "key": "CS-420",
+            "summary": "Account Service SDK publishing",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-12T07:22:31.928-0500",
+            "inProgressHours": 318.9,
+            "inProgressFormatted": "13.3 d (319 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-420"
+          },
+          {
+            "key": "CS-520",
+            "summary": "Update snyk dependencies",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-05T06:17:57.326-0500",
+            "inProgressHours": 99.4,
+            "inProgressFormatted": "4.1 d (99 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-520"
+          },
+          {
+            "key": "CS-544",
+            "summary": "Monitoring Thresholds for various Queues present in Registry\n",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T08:37:46.659-0500",
+            "inProgressHours": 25.3,
+            "inProgressFormatted": "1.1 d (25 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-544"
+          },
+          {
+            "key": "CS-538",
+            "summary": "Refresh the follow-redirects lock under axios@1.20.0",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T08:37:44.380-0500",
+            "inProgressHours": 48.1,
+            "inProgressFormatted": "2.0 d (48 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-538"
+          },
+          {
+            "key": "CS-537",
+            "summary": "Upgrade zod to 4.6.6 (SNYK-JS-ZOD-20510278)",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T08:37:42.195-0500",
+            "inProgressHours": 46.5,
+            "inProgressFormatted": "1.9 d (47 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-537"
+          },
+          {
+            "key": "CS-534",
+            "summary": "Patch transitive body-parser and qs issues under @bull-board/express",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T08:37:37.358-0500",
+            "inProgressHours": 100.3,
+            "inProgressFormatted": "4.2 d (100 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-534"
+          },
+          {
+            "key": "CS-518",
+            "summary": "Implement SDK  UBID main",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T08:37:33.104-0500",
+            "inProgressHours": 49.4,
+            "inProgressFormatted": "2.1 d (49 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-518"
+          },
+          {
+            "key": "CS-533",
+            "summary": "Upgrade body-parser to 2.4.0 (CVE-2026-111181)",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-02T15:36:27.720-0500",
+            "inProgressHours": 23,
+            "inProgressFormatted": "23.0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-533"
+          },
+          {
+            "key": "CS-408",
+            "summary": "Automated OpenAPI/Swagger Contract Alignment",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-02T15:36:19.094-0500",
+            "inProgressHours": 158.8,
+            "inProgressFormatted": "6.6 d (159 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-408"
+          },
+          {
+            "key": "CS-503",
+            "summary": "Script to dump and restore dev DB into local db",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-26T10:11:13.625-0400",
+            "inProgressHours": 52.6,
+            "inProgressFormatted": "2.2 d (53 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-503"
+          },
+          {
+            "key": "CS-507",
+            "summary": "Auth0 token lifetimes (accessToken 30 min / refreshToken 24h) not applied on DEV environment",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T10:19:39.258-0400",
+            "inProgressHours": 137.3,
+            "inProgressFormatted": "5.7 d (137 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-507"
+          },
+          {
+            "key": "CS-504",
+            "summary": "Add fullDescription to account distributionEmailPreferences",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-26T15:40:47.020-0400",
+            "inProgressHours": 49.3,
+            "inProgressFormatted": "2.1 d (49 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-504"
+          },
+          {
+            "key": "CS-415",
+            "summary": "Mock RBM agent count on account external data",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-26T15:40:44.855-0400",
+            "inProgressHours": 174.4,
+            "inProgressFormatted": "7.3 d (174 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-415"
+          },
+          {
+            "key": "CS-473",
+            "summary": "Install in pipeline and dev machine the 0.5.0 sdk version",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-26T06:53:03.391-0400",
+            "inProgressHours": 192,
+            "inProgressFormatted": "8.0 d (192 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-473"
+          }
+        ],
+        "bouncedTickets": []
+      },
+      "bitbucket": {
+        "prsCreated": 36,
+        "prsMerged": 30,
+        "prsDeclined": 5,
+        "prsReviewed": 82,
+        "commits": 43,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": [
+        {
+          "label": "Cero Rebotes QA",
+          "icon": "fa-shield-halved",
+          "type": "green"
+        },
+        {
+          "label": "Top Reviewer",
+          "icon": "fa-magnifying-glass",
+          "type": "blue"
+        }
+      ]
+    },
+    {
+      "identifier": "victor.diaz@intive.com",
+      "displayName": "Victor Diaz",
+      "email": "victor.diaz@intive.com",
+      "jira": {
+        "resolvedCount": 16,
+        "resolvedByType": {
+          "story": 7,
+          "bug": 2,
+          "task": 7,
+          "other": 0
+        },
+        "totalInProgressHours": 1831.0999999999997,
+        "avgInProgressHoursPerTicket": 114.4,
+        "totalInProgressFormatted": "76.3 d (1831 h)",
+        "avgInProgressFormatted": "4.8 d (114 h)",
+        "qaBouncesCount": 1,
+        "ticketsPassedThroughQA": 18,
+        "qaBounceRatePct": 6,
+        "currentWipCount": 0,
+        "resolvedTickets": [
+          {
+            "key": "CS-571",
+            "summary": "[BUG] Optional Brand Logo is not saved after uploading an image",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-18T08:26:53.912-0500",
+            "inProgressHours": 71.5,
+            "inProgressFormatted": "3.0 d (72 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-571"
+          },
+          {
+            "key": "CS-562",
+            "summary": "Brand Service Snyk",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-16T08:13:43.796-0500",
+            "inProgressHours": 8.2,
+            "inProgressFormatted": "8.2 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-562"
+          },
+          {
+            "key": "CS-458",
+            "summary": "Flag brand as duplicate (SCR Only)",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-12T07:57:27.931-0500",
+            "inProgressHours": 26.2,
+            "inProgressFormatted": "1.1 d (26 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-458"
+          },
+          {
+            "key": "CS-390",
+            "summary": "Brand-Service package.json update dependencies",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "High",
+            "resolvedAt": "2026-11-09T10:27:30.274-0500",
+            "inProgressHours": 895.8,
+            "inProgressFormatted": "37.3 d (896 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-390"
+          },
+          {
+            "key": "CS-551",
+            "summary": "Creating a new Brand is failing because point of contact validation (which has not yet been filled)",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T11:06:55.866-0500",
+            "inProgressHours": 162.3,
+            "inProgressFormatted": "6.8 d (162 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-551"
+          },
+          {
+            "key": "CS-543",
+            "summary": "Setup E2E environment guide Brand Service",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T15:04:18.189-0500",
+            "inProgressHours": 0,
+            "inProgressFormatted": "0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-543"
+          },
+          {
+            "key": "CS-370",
+            "summary": "Unified Brand Vetting History (Foundations and SCR Consumer Only)",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T15:04:05.923-0500",
+            "inProgressHours": 111.3,
+            "inProgressFormatted": "4.6 d (111 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-370"
+          },
+          {
+            "key": "SCRP-37597",
+            "summary": "SCR Frontend: Adjust Vetting Errors component to display errors from Brand data instead of fetching from SCR Vetting Service",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T14:28:20.207-0500",
+            "inProgressHours": 32.6,
+            "inProgressFormatted": "1.4 d (33 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37597"
+          },
+          {
+            "key": "SCRP-37130",
+            "summary": "Resync brand status on short code lease events",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-04T10:00:11.302-0500",
+            "inProgressHours": 224.5,
+            "inProgressFormatted": "9.4 d (225 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37130"
+          },
+          {
+            "key": "SCRP-37596",
+            "summary": "Expose vetting errors and findings in SCR Backend Get Brand by ID endpoint",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-04T11:37:48.265-0500",
+            "inProgressHours": 22.5,
+            "inProgressFormatted": "22.5 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37596"
+          },
+          {
+            "key": "SCRP-37584",
+            "summary": "Expose vetting agent, errors, and findings on Brand Service GET brand by ID",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-03T08:23:02.457-0500",
+            "inProgressHours": 79.4,
+            "inProgressFormatted": "3.3 d (79 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37584"
+          },
+          {
+            "key": "SCRP-37073",
+            "summary": "Integrate Brand Service to List Brand Clients (Own Account / Master Registry)",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T16:35:10.777-0400",
+            "inProgressHours": 154.3,
+            "inProgressFormatted": "6.4 d (154 h)",
+            "qaBounces": 1,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37073"
+          },
+          {
+            "key": "SCRP-37377",
+            "summary": "G1: Short code search returns 400 from Brand Service",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T16:35:15.454-0400",
+            "inProgressHours": 2.6,
+            "inProgressFormatted": "2.6 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37377"
+          },
+          {
+            "key": "CS-419",
+            "summary": "Inbound UBID vetting status updates",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T12:02:36.903-0400",
+            "inProgressHours": 20.8,
+            "inProgressFormatted": "20.8 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-419"
+          },
+          {
+            "key": "SCRP-37380",
+            "summary": "G4: FEIN search does not filter Brand Status counts",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T09:20:51.056-0400",
+            "inProgressHours": 17,
+            "inProgressFormatted": "17.0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37380"
+          },
+          {
+            "key": "SCRP-37378",
+            "summary": "G2: Brand status mismatch vs Dev (annual re-vetting)",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-23T13:31:54.304-0400",
+            "inProgressHours": 2.1,
+            "inProgressFormatted": "2.1 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37378"
+          }
+        ],
+        "bouncedTickets": [
+          {
+            "key": "SCRP-37073",
+            "summary": "Integrate Brand Service to List Brand Clients (Own Account / Master Registry)",
+            "issueType": "Story",
+            "bouncesCount": 1,
+            "transitions": [
+              {
+                "date": "2026-10-20T18:05:03.542-0400",
+                "from": "Code Review",
+                "to": "In Progress",
+                "author": "Victor Diaz"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37073"
+          }
+        ]
+      },
+      "bitbucket": {
+        "prsCreated": 31,
+        "prsMerged": 25,
+        "prsDeclined": 5,
+        "prsReviewed": 19,
+        "commits": 55,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": []
+    },
+    {
+      "identifier": "oscar.toro@intive.com",
+      "displayName": "Oscar Miguel Toro Torres",
+      "email": "oscar.toro@intive.com",
+      "jira": {
+        "resolvedCount": 11,
+        "resolvedByType": {
+          "story": 2,
+          "bug": 0,
+          "task": 9,
+          "other": 0
+        },
+        "totalInProgressHours": 997,
+        "avgInProgressHoursPerTicket": 90.6,
+        "totalInProgressFormatted": "41.5 d (997 h)",
+        "avgInProgressFormatted": "3.8 d (91 h)",
+        "qaBouncesCount": 5,
+        "ticketsPassedThroughQA": 18,
+        "qaBounceRatePct": 17,
+        "currentWipCount": 1,
+        "resolvedTickets": [
+          {
+            "key": "CS-463",
+            "summary": "Brand Vetting History: POC Verification steps",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-18T14:24:22.188-0500",
+            "inProgressHours": 8.7,
+            "inProgressFormatted": "8.7 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-463"
+          },
+          {
+            "key": "CS-553",
+            "summary": "Re-vet Date ascending sort must put NULL (empty) values first",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-16T08:39:11.961-0500",
+            "inProgressHours": 151.5,
+            "inProgressFormatted": "6.3 d (152 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-553"
+          },
+          {
+            "key": "CS-273",
+            "summary": "Create a PR to clean up orphaned actions.",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-29T09:33:55.919-0400",
+            "inProgressHours": 457.2,
+            "inProgressFormatted": "19.1 d (457 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-273"
+          },
+          {
+            "key": "CS-524",
+            "summary": "[BUG] Logout page is displayed after changing the email",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-03T09:05:06.939-0500",
+            "inProgressHours": 24.6,
+            "inProgressFormatted": "1.0 d (25 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-524"
+          },
+          {
+            "key": "CS-511",
+            "summary": "[BUG][UBID] Login is not working for SAML user",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-23T16:12:37.537-0400",
+            "inProgressHours": 4.8,
+            "inProgressFormatted": "4.8 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-511"
+          },
+          {
+            "key": "CS-395",
+            "summary": "GCH - IdP :: Auth0 SAML Setup AND Enable Identifier first (Login Workflow) RC 2.2.0",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-02T07:18:08.187-0500",
+            "inProgressHours": 87.1,
+            "inProgressFormatted": "3.6 d (87 h)",
+            "qaBounces": 3,
+            "url": "https://gchtech.atlassian.net/browse/CS-395"
+          },
+          {
+            "key": "CS-528",
+            "summary": "[BUG][IDP] Missing client.addons.samlp.logout.callback is displayed",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-02T15:22:10.266-0500",
+            "inProgressHours": 23.6,
+            "inProgressFormatted": "23.6 h",
+            "qaBounces": 1,
+            "url": "https://gchtech.atlassian.net/browse/CS-528"
+          },
+          {
+            "key": "CS-540",
+            "summary": "[BUG][MFA] Reset MFA is not working for SAML accounts",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-02T06:47:14.220-0500",
+            "inProgressHours": 2.9,
+            "inProgressFormatted": "2.9 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-540"
+          },
+          {
+            "key": "CS-514",
+            "summary": "[BUG][Invalid Login] UX/UI discrepancies",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T16:59:47.129-0400",
+            "inProgressHours": 0.4,
+            "inProgressFormatted": "24 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-514"
+          },
+          {
+            "key": "CS-485",
+            "summary": "[Frontend] Support SAML SSO Status Labels, CSO Action Menus, and UI Banners",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T16:55:02.283-0400",
+            "inProgressHours": 118,
+            "inProgressFormatted": "4.9 d (118 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-485"
+          },
+          {
+            "key": "CS-481",
+            "summary": "[SCR Frontend] Restrict Email Modification UI for SAML Users and Organizations",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T16:55:00.744-0400",
+            "inProgressHours": 118.2,
+            "inProgressFormatted": "4.9 d (118 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-481"
+          }
+        ],
+        "bouncedTickets": [
+          {
+            "key": "SCRP-35931",
+            "summary": "[Login] This page isn’t working",
+            "issueType": "Bug",
+            "bouncesCount": 1,
+            "transitions": [
+              {
+                "date": "2026-08-14T14:28:59.036-0400",
+                "from": "Ready for Verification",
+                "to": "Reopened",
+                "author": "belen.llobet.ext"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/SCRP-35931"
+          },
+          {
+            "key": "CS-395",
+            "summary": "GCH - IdP :: Auth0 SAML Setup AND Enable Identifier first (Login Workflow) RC 2.2.0",
+            "issueType": "Story",
+            "bouncesCount": 3,
+            "transitions": [
+              {
+                "date": "2026-10-30T08:57:11.653-0400",
+                "from": "In QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              },
+              {
+                "date": "2026-10-26T07:31:05.977-0400",
+                "from": "In QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              },
+              {
+                "date": "2026-10-23T10:56:36.797-0400",
+                "from": "In QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/CS-395"
+          },
+          {
+            "key": "CS-528",
+            "summary": "[BUG][IDP] Missing client.addons.samlp.logout.callback is displayed",
+            "issueType": "Sub-task",
+            "bouncesCount": 1,
+            "transitions": [
+              {
+                "date": "2026-11-02T09:28:25.707-0500",
+                "from": "Ready for QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/CS-528"
+          }
+        ]
+      },
+      "bitbucket": {
+        "prsCreated": 40,
+        "prsMerged": 36,
+        "prsDeclined": 3,
+        "prsReviewed": 11,
+        "commits": 103,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": [
+        {
+          "label": "Code Champion",
+          "icon": "fa-rocket",
+          "type": "purple"
+        }
+      ]
+    },
+    {
+      "identifier": "gabriel.peralta@intive.com",
+      "displayName": "Gabriel Peralta",
+      "email": "gabriel.peralta@intive.com",
+      "jira": {
+        "resolvedCount": 10,
+        "resolvedByType": {
+          "story": 1,
+          "bug": 2,
+          "task": 7,
+          "other": 0
+        },
+        "totalInProgressHours": 1473.3,
+        "avgInProgressHoursPerTicket": 147.3,
+        "totalInProgressFormatted": "61.4 d (1473 h)",
+        "avgInProgressFormatted": "6.1 d (147 h)",
+        "qaBouncesCount": 9,
+        "ticketsPassedThroughQA": 11,
+        "qaBounceRatePct": 36,
+        "currentWipCount": 1,
+        "resolvedTickets": [
+          {
+            "key": "CS-555",
+            "summary": "[UBID][AUTH-Token] Access token endpoint returns 404 on Dev",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "High",
+            "resolvedAt": "2026-11-12T11:10:14.913-0500",
+            "inProgressHours": 89.9,
+            "inProgressFormatted": "3.7 d (90 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-555"
+          },
+          {
+            "key": "CS-512",
+            "summary": "Switching between (SCRP and UBID) not working with same session on different chrome tab",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-23T13:21:37.815-0400",
+            "inProgressHours": 0.4,
+            "inProgressFormatted": "24 m",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-512"
+          },
+          {
+            "key": "CS-549",
+            "summary": "[SCR-fronent] -  Implement Auth0 session revocation checks in SCR frontend using the GCH Account Service SDK",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T16:34:32.767-0500",
+            "inProgressHours": 28,
+            "inProgressFormatted": "1.2 d (28 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-549"
+          },
+          {
+            "key": "CS-411",
+            "summary": "Dynamic Client Application APP_BASE_URL",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T15:47:21.798-0500",
+            "inProgressHours": 666.4,
+            "inProgressFormatted": "27.8 d (666 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-411"
+          },
+          {
+            "key": "CS-452",
+            "summary": "Implementation for gch-account-service-sdk",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T15:47:11.069-0500",
+            "inProgressHours": 474.3,
+            "inProgressFormatted": "19.8 d (474 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-452"
+          },
+          {
+            "key": "CS-413",
+            "summary": "Implementation for scr-frontend",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T15:16:18.548-0500",
+            "inProgressHours": 19.8,
+            "inProgressFormatted": "19.8 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-413"
+          },
+          {
+            "key": "CS-277",
+            "summary": "[gch-account-service] Auth0 Back-Channel Logout denylist + session revocation check",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-03T13:21:04.907-0500",
+            "inProgressHours": 119.1,
+            "inProgressFormatted": "5.0 d (119 h)",
+            "qaBounces": 4,
+            "url": "https://gchtech.atlassian.net/browse/CS-277"
+          },
+          {
+            "key": "CS-526",
+            "summary": "[BUG] Logout back channel is working only the first time",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-03T10:16:47.972-0500",
+            "inProgressHours": 22.9,
+            "inProgressFormatted": "22.9 h",
+            "qaBounces": 1,
+            "url": "https://gchtech.atlassian.net/browse/CS-526"
+          },
+          {
+            "key": "CS-530",
+            "summary": "[BUG] Email Changed terminates all active sessions, the behaviour is not same between UBID and SCRP",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-02T10:02:01.865-0500",
+            "inProgressHours": 12,
+            "inProgressFormatted": "12.0 h",
+            "qaBounces": 2,
+            "url": "https://gchtech.atlassian.net/browse/CS-530"
+          },
+          {
+            "key": "CS-525",
+            "summary": "[Bug] Logout page is displayed after disabling the user",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-03T10:29:33.181-0500",
+            "inProgressHours": 40.5,
+            "inProgressFormatted": "1.7 d (41 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-525"
+          }
+        ],
+        "bouncedTickets": [
+          {
+            "key": "SCRP-35938",
+            "summary": "[SCR APP] Auth0 UI polishing",
+            "issueType": "Story",
+            "bouncesCount": 2,
+            "transitions": [
+              {
+                "date": "2026-08-21T14:30:03.879-0400",
+                "from": "In QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              },
+              {
+                "date": "2026-08-20T11:26:57.880-0400",
+                "from": "Ready for QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/SCRP-35938"
+          },
+          {
+            "key": "CS-277",
+            "summary": "[gch-account-service] Auth0 Back-Channel Logout denylist + session revocation check",
+            "issueType": "Task",
+            "bouncesCount": 4,
+            "transitions": [
+              {
+                "date": "2026-11-03T08:29:28.161-0500",
+                "from": "Ready for QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              },
+              {
+                "date": "2026-11-02T09:28:29.331-0500",
+                "from": "Ready for QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              },
+              {
+                "date": "2026-10-28T15:10:10.546-0400",
+                "from": "In QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              },
+              {
+                "date": "2026-10-28T07:51:32.885-0400",
+                "from": "In QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/CS-277"
+          },
+          {
+            "key": "CS-526",
+            "summary": "[BUG] Logout back channel is working only the first time",
+            "issueType": "Sub-task",
+            "bouncesCount": 1,
+            "transitions": [
+              {
+                "date": "2026-11-03T08:28:19.895-0500",
+                "from": "Ready for QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/CS-526"
+          },
+          {
+            "key": "CS-530",
+            "summary": "[BUG] Email Changed terminates all active sessions, the behaviour is not same between UBID and SCRP",
+            "issueType": "Sub-task",
+            "bouncesCount": 2,
+            "transitions": [
+              {
+                "date": "2026-10-30T10:06:23.586-0400",
+                "from": "Code Review",
+                "to": "In Progress",
+                "author": "Gabriel Peralta"
+              },
+              {
+                "date": "2026-10-29T14:51:04.995-0400",
+                "from": "Code Review",
+                "to": "In Progress",
+                "author": "Gabriel Peralta"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/CS-530"
+          }
+        ]
+      },
+      "bitbucket": {
+        "prsCreated": 28,
+        "prsMerged": 19,
+        "prsDeclined": 7,
+        "prsReviewed": 14,
+        "commits": 50,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": []
+    },
+    {
+      "identifier": "bruno.brito.ext@intive.com",
+      "displayName": "Bruno Brito de Jesus",
+      "email": "bruno.brito.ext@intive.com",
+      "jira": {
+        "resolvedCount": 11,
+        "resolvedByType": {
+          "story": 4,
+          "bug": 1,
+          "task": 6,
+          "other": 0
+        },
+        "totalInProgressHours": 1062.2,
+        "avgInProgressHoursPerTicket": 96.6,
+        "totalInProgressFormatted": "44.3 d (1062 h)",
+        "avgInProgressFormatted": "4.0 d (97 h)",
+        "qaBouncesCount": 1,
+        "ticketsPassedThroughQA": 19,
+        "qaBounceRatePct": 5,
+        "currentWipCount": 1,
+        "resolvedTickets": [
+          {
+            "key": "CS-569",
+            "summary": "[BUG] Combined Brand Status filter does not work in Brands Table",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-18T09:33:50.418-0500",
+            "inProgressHours": 93.8,
+            "inProgressFormatted": "3.9 d (94 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-569"
+          },
+          {
+            "key": "CS-554",
+            "summary": "Fix Doing Business As / Trade Name sorting (empty vs multiple vs text)",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "High",
+            "resolvedAt": "2026-11-13T09:19:01.888-0500",
+            "inProgressHours": 101.7,
+            "inProgressFormatted": "4.2 d (102 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-554"
+          },
+          {
+            "key": "SCRP-37074",
+            "summary": "Integrate Brand Service for Create / Update / Delete Brand Client",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T12:36:58.806-0500",
+            "inProgressHours": 335.4,
+            "inProgressFormatted": "14.0 d (335 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37074"
+          },
+          {
+            "key": "SCRP-37367",
+            "summary": "Refresh lease DBA and trade-name sorting from brand-updated jobs",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T08:38:33.240-0500",
+            "inProgressHours": 149.3,
+            "inProgressFormatted": "6.2 d (149 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37367"
+          },
+          {
+            "key": "CS-531",
+            "summary": "BrandService - Script to dump and restore dev DB into local db",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-05T14:08:32.769-0500",
+            "inProgressHours": 43.6,
+            "inProgressFormatted": "1.8 d (44 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-531"
+          },
+          {
+            "key": "CS-535",
+            "summary": "Upgrade @nestjs/platform-express to 12.3.0 (multer CVE-2026-113872)",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-05T08:45:56.353-0500",
+            "inProgressHours": 25.6,
+            "inProgressFormatted": "1.1 d (26 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-535"
+          },
+          {
+            "key": "CS-536",
+            "summary": "BullMQ 6 major upgrade for ioredis CVE-2026-93435",
+            "issueType": "Story",
+            "category": "story",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-05T08:45:51.297-0500",
+            "inProgressHours": 20,
+            "inProgressFormatted": "20.0 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-536"
+          },
+          {
+            "key": "SCRP-37562",
+            "summary": "Align PATCH brand DBA and trade name list sync with Account Service",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-02T08:39:33.159-0500",
+            "inProgressHours": 3.8,
+            "inProgressFormatted": "3.8 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37562"
+          },
+          {
+            "key": "SCRP-37368",
+            "summary": "[SCR] Map physical address from Brand Service",
+            "issueType": "Sub-task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-30T08:27:45.504-0400",
+            "inProgressHours": 20.7,
+            "inProgressFormatted": "20.7 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/SCRP-37368"
+          },
+          {
+            "key": "CS-517",
+            "summary": "Migrate T&C acceptance writes to Account Service",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T08:22:21.693-0400",
+            "inProgressHours": 36.1,
+            "inProgressFormatted": "1.5 d (36 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-517"
+          },
+          {
+            "key": "CS-416",
+            "summary": "[Auth0] Remove Imperative Custom JavaScript and Widget DOM Injections from Universal Login Template",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-27T08:14:38.585-0400",
+            "inProgressHours": 232.2,
+            "inProgressFormatted": "9.7 d (232 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-416"
+          }
+        ],
+        "bouncedTickets": [
+          {
+            "key": "CS-563",
+            "summary": "[Dev env] ERR_TOO_MANY_REDIRECTS",
+            "issueType": "Bug",
+            "bouncesCount": 1,
+            "transitions": [
+              {
+                "date": "2026-11-17T07:46:18.869-0500",
+                "from": "Ready for QA",
+                "to": "In Progress",
+                "author": "belen.llobet.ext"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/CS-563"
+          }
+        ]
+      },
+      "bitbucket": {
+        "prsCreated": 22,
+        "prsMerged": 18,
+        "prsDeclined": 2,
+        "prsReviewed": 31,
+        "commits": 32,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": []
+    },
+    {
+      "identifier": "gustavo.ossio@intive.com",
+      "displayName": "Gustavo Adolfo Ossio Jimenez",
+      "email": "gustavo.ossio@intive.com",
+      "jira": {
+        "resolvedCount": 7,
+        "resolvedByType": {
+          "story": 0,
+          "bug": 2,
+          "task": 5,
+          "other": 0
+        },
+        "totalInProgressHours": 2382.5,
+        "avgInProgressHoursPerTicket": 340.4,
+        "totalInProgressFormatted": "99.3 d (2383 h)",
+        "avgInProgressFormatted": "14.2 d (340 h)",
+        "qaBouncesCount": 1,
+        "ticketsPassedThroughQA": 10,
+        "qaBounceRatePct": 10,
+        "currentWipCount": 1,
+        "resolvedTickets": [
+          {
+            "key": "CS-570",
+            "summary": "[BUG] Brand Creation \"Omit Physical Address\" checkbox is selected by default",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-18T10:51:36.496-0500",
+            "inProgressHours": 94.4,
+            "inProgressFormatted": "3.9 d (94 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-570"
+          },
+          {
+            "key": "CS-456",
+            "summary": "SCR Clean-up #2: Remove accounts table colums migrated to Account Service",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-13T16:02:19.261-0500",
+            "inProgressHours": 722.4,
+            "inProgressFormatted": "30.1 d (722 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-456"
+          },
+          {
+            "key": "CS-453",
+            "summary": "Strengthen Resource Access Guard",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-13T16:02:14.693-0500",
+            "inProgressHours": 658.1,
+            "inProgressFormatted": "27.4 d (658 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-453"
+          },
+          {
+            "key": "CS-552",
+            "summary": "Fix Program Type (organization type) sort order on brand list",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "High",
+            "resolvedAt": "2026-11-10T16:26:04.729-0500",
+            "inProgressHours": 94.7,
+            "inProgressFormatted": "3.9 d (95 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-552"
+          },
+          {
+            "key": "CS-373",
+            "summary": "[GCH Admin][User][Resend Credentials] An error is displayed after sending the second time the credentials",
+            "issueType": "Bug",
+            "category": "bug",
+            "priority": "Medium",
+            "resolvedAt": "2026-10-20T12:57:47.676-0400",
+            "inProgressHours": 6.3,
+            "inProgressFormatted": "6.3 h",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-373"
+          },
+          {
+            "key": "CS-455",
+            "summary": "SCR Clean-up #1: Remove migrated contacts and users from scr-backend database schema",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-09T15:57:28.513-0500",
+            "inProgressHours": 719,
+            "inProgressFormatted": "30.0 d (719 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-455"
+          },
+          {
+            "key": "CS-519",
+            "summary": "Implement SDK RBM main",
+            "issueType": "Task",
+            "category": "task",
+            "priority": "Medium",
+            "resolvedAt": "2026-11-06T08:38:30.730-0500",
+            "inProgressHours": 87.6,
+            "inProgressFormatted": "3.7 d (88 h)",
+            "qaBounces": 0,
+            "url": "https://gchtech.atlassian.net/browse/CS-519"
+          }
+        ],
+        "bouncedTickets": [
+          {
+            "key": "CS-280",
+            "summary": "Script to cleanup Auth0 Users in STG2",
+            "issueType": "Task",
+            "bouncesCount": 1,
+            "transitions": [
+              {
+                "date": "2026-08-07T16:39:11.997-0400",
+                "from": "Code Review",
+                "to": "In Progress",
+                "author": "Gustavo Adolfo Ossio Jimenez"
+              }
+            ],
+            "url": "https://gchtech.atlassian.net/browse/CS-280"
+          }
+        ]
+      },
+      "bitbucket": {
+        "prsCreated": 10,
+        "prsMerged": 10,
+        "prsDeclined": 0,
+        "prsReviewed": 10,
+        "commits": 44,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": []
+    }
+  ]
+}

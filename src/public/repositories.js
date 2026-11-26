@@ -73,6 +73,20 @@
       contentTitle: requireElement('content-title'),
       openBitbucket: requireElement('open-bitbucket'),
       bitbucketListLink: requireElement('bitbucket-list-link'),
+      teamsCopyButton: requireElement('teams-copy-button'),
+      teamsModal: requireElement('teams-modal'),
+      teamsMessageText: requireElement('teams-message-text'),
+      modalCloseBtn: requireElement('modal-close-btn'),
+      modalCloseAction: requireElement('modal-close-action'),
+      modalCopyAction: requireElement('modal-copy-action'),
+      modalCopyLabel: requireElement('modal-copy-label'),
+      modalCopyAlert: requireElement('modal-copy-alert'),
+      modalAlertText: requireElement('modal-alert-text'),
+      modalFooterStats: requireElement('modal-footer-stats'),
+      teamsIncludeDrafts: requireElement('teams-include-drafts'),
+      teamsOnlyConflicts: requireElement('teams-only-conflicts'),
+      teamsOnlyUnreviewed: requireElement('teams-only-unreviewed'),
+      teamsIncludeDetails: requireElement('teams-include-details'),
       statRow: requireElement('stat-row'),
       userFilters: requireElement('user-filters'),
       stateTabs: requireElement('state-tabs'),
@@ -136,6 +150,55 @@
 
     elements.refreshButton.addEventListener('click', () => {
       refreshBoard(elements, viewState, pageConfig, { manual: true, showSpinner: false });
+    });
+
+    elements.teamsCopyButton.addEventListener('click', async () => {
+      await handleTeamsExport(elements, viewState, pageConfig);
+    });
+
+    elements.teamsIncludeDrafts.addEventListener('change', () => {
+      refreshTeamsModal(elements, viewState, pageConfig);
+    });
+
+    elements.teamsOnlyConflicts.addEventListener('change', () => {
+      refreshTeamsModal(elements, viewState, pageConfig);
+    });
+
+    elements.teamsOnlyUnreviewed.addEventListener('change', () => {
+      refreshTeamsModal(elements, viewState, pageConfig);
+    });
+
+    elements.teamsIncludeDetails.addEventListener('change', () => {
+      refreshTeamsModal(elements, viewState, pageConfig);
+    });
+
+    elements.modalCopyAction.addEventListener('click', async () => {
+      const text = elements.teamsMessageText.value;
+      const html = elements.teamsMessageText.dataset.html || '';
+      const copied = await copyToClipboard(text, html);
+      if (copied) {
+        flashModalAlert(elements, '¡Mensaje copiado de nuevo al portapapeles!');
+      }
+    });
+
+    elements.modalCloseBtn.addEventListener('click', () => {
+      elements.teamsModal.hidden = true;
+    });
+
+    elements.modalCloseAction.addEventListener('click', () => {
+      elements.teamsModal.hidden = true;
+    });
+
+    elements.teamsModal.addEventListener('click', (event) => {
+      if (event.target === elements.teamsModal) {
+        elements.teamsModal.hidden = true;
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !elements.teamsModal.hidden) {
+        elements.teamsModal.hidden = true;
+      }
     });
   }
 
@@ -328,6 +391,8 @@
       { label: 'Drafts', value: sumCount(summaries, 'draftCount', viewState) },
       { label: 'Approved', value: sumCount(summaries, 'approvedCount', viewState) },
       { label: 'Changes requested', value: sumCount(summaries, 'changesRequestedCount', viewState), alert: true },
+      { label: 'Sin review', value: sumCount(summaries, 'unreviewedCount', viewState), alert: true },
+      { label: 'Conflicts', value: sumCount(summaries, 'conflictCount', viewState), alert: true },
       { label: 'Builds failing', value: sumCount(summaries, 'buildFailedCount', viewState), alert: true },
       { label: 'Builds running', value: sumCount(summaries, 'buildInProgressCount', viewState) },
     ];
@@ -414,9 +479,10 @@
   function renderPullRequest(pullRequest) {
     const attentionClass = needsAttention(pullRequest) ? ' needs-attention' : '';
     const draftBadge = pullRequest.draft ? '<span class="lozenge lozenge-draft">Draft</span>' : '';
-    const reviewerTitle = (pullRequest.review.reviewers || [])
-      .map((reviewer) => `${reviewer.displayName} (${reviewer.state.replaceAll('_', ' ')})`)
-      .join(', ');
+    const conflictBadge = renderConflictBadge(pullRequest);
+    const reviewedBadge = renderReviewedBadge(pullRequest);
+    const approvalBadge = renderApprovalBadge(pullRequest.review);
+    const reviewersRow = renderReviewersRow(pullRequest.review?.reviewers || []);
 
     return `
       <article class="pull-request${attentionClass}">
@@ -428,22 +494,145 @@
           <p class="pull-request-meta">
             <span class="pull-request-id">#${escapeHtml(pullRequest.id)}</span>
             <span>updated ${escapeHtml(formatAge(pullRequest.updatedOn))}</span>
-            <span>opened ${escapeHtml(formatAge(pullRequest.createdOn))} by <a class="author-activity-link" href="/activity?user=${encodeURIComponent(pullRequest.author.displayName)}&repository=${encodeURIComponent(pullRequest.repositorySlug)}" title="Ver actividad de ${escapeHtml(pullRequest.author.displayName)}">${escapeHtml(pullRequest.author.displayName)}</a></span>
+            <span>opened ${escapeHtml(formatAge(pullRequest.createdOn))} by <a class="author-activity-link" href="/activity?user=${encodeURIComponent(pullRequest.author.displayName)}&repository=${encodeURIComponent(pullRequest.repositorySlug)}" title="View activity of ${escapeHtml(pullRequest.author.displayName)}">${escapeHtml(pullRequest.author.displayName)}</a></span>
           </p>
           <p class="branches">
             <span class="branch">${escapeHtml(pullRequest.sourceBranch)}</span>
             <span aria-hidden="true">→</span>
             <span class="branch">${escapeHtml(pullRequest.destinationBranch)}</span>
           </p>
+          ${reviewersRow}
         </div>
         <div class="pull-request-status">
           ${renderBuild(pullRequest.build)}
-          <span class="lozenge review-${escapeHtml(pullRequest.review.overall)}" title="${escapeHtml(reviewerTitle || pullRequest.review.label)}">${escapeHtml(pullRequest.review.label)}</span>
-          ${renderReviewers(pullRequest.review.reviewers || [])}
+          ${conflictBadge}
+          ${reviewedBadge}
+          ${approvalBadge}
           <span class="count" title="Comments"><i class="fa-regular fa-comment" aria-hidden="true"></i> ${escapeHtml(pullRequest.commentCount)}</span>
           <span class="count" title="Tasks"><i class="fa-regular fa-square-check" aria-hidden="true"></i> ${escapeHtml(pullRequest.taskCount)}</span>
         </div>
       </article>`;
+  }
+
+  function renderReviewedBadge(pullRequest) {
+    if (pullRequest.state && pullRequest.state !== 'OPEN' && !pullRequest.draft) {
+      return '';
+    }
+    if (pullRequest.hasBeenReviewed) {
+      const label = pullRequest.reviewStateLabel || 'Revisado';
+      return `<span class="lozenge review-has-review" title="Este PR ya recibió revisión o comentarios: ${escapeHtml(label)}"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> <span>${escapeHtml(label)}</span></span>`;
+    }
+    return `<span class="lozenge review-unreviewed" title="Este PR aún no ha recibido revisión de ningún revisor"><i class="fa-regular fa-hourglass-half" aria-hidden="true"></i> <span>Sin review aún</span></span>`;
+  }
+
+  function renderConflictBadge(pullRequest) {
+    if (pullRequest.state && pullRequest.state !== 'OPEN' && !pullRequest.draft) {
+      return '';
+    }
+
+    if (pullRequest.hasConflict) {
+      const conflictFiles = pullRequest.conflict?.files || [];
+      const title = conflictFiles.length > 0
+        ? `Merge conflicts in: ${conflictFiles.slice(0, 3).join(', ')}${conflictFiles.length > 3 ? '...' : ''}`
+        : 'This pull request has merge conflicts that must be resolved';
+      const fileCountText = pullRequest.conflict?.count > 1 ? ` (${pullRequest.conflict.count})` : '';
+      return `<span class="lozenge lozenge-conflict" title="${escapeHtml(title)}"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> <span>Conflict${escapeHtml(fileCountText)}</span></span>`;
+    }
+
+    return `<span class="lozenge lozenge-clean" title="No merge conflicts detected between source and destination branches"><i class="fa-solid fa-code-merge" aria-hidden="true"></i> <span>No conflicts</span></span>`;
+  }
+
+  function renderApprovalBadge(review) {
+    if (!review) return '';
+    const overall = review.overall || 'no_reviewers';
+    const approvedCount = review.approvedCount || 0;
+    const reviewerCount = review.reviewerCount || 0;
+    const changesCount = review.changesRequestedCount || 0;
+
+    let icon = '';
+    let label = '';
+    let title = '';
+
+    if (overall === 'approved') {
+      icon = '<i class="fa-solid fa-circle-check" aria-hidden="true"></i>';
+      label = reviewerCount > 1 ? `Approved (${approvedCount}/${reviewerCount})` : 'Approved';
+      title = `Approved by ${approvedCount} of ${reviewerCount} reviewer${reviewerCount === 1 ? '' : 's'}`;
+    } else if (overall === 'partially_approved') {
+      icon = '<i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>';
+      label = `Partially approved (${approvedCount}/${reviewerCount})`;
+      title = `${approvedCount} of ${reviewerCount} reviewers approved. Awaiting remaining reviews.`;
+    } else if (overall === 'changes_requested') {
+      icon = '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>';
+      label = changesCount > 1 ? `Changes requested (${changesCount})` : 'Changes requested';
+      title = `${changesCount} reviewer${changesCount === 1 ? ' has' : 's have'} requested changes`;
+    } else if (overall === 'pending') {
+      icon = '<i class="fa-regular fa-clock" aria-hidden="true"></i>';
+      label = reviewerCount > 0 ? `Needs approval (0/${reviewerCount})` : 'Review pending';
+      title = `Awaiting review from ${reviewerCount} assigned reviewer${reviewerCount === 1 ? '' : 's'}`;
+    } else {
+      icon = '<i class="fa-solid fa-user-xmark" aria-hidden="true"></i>';
+      label = 'No reviewers';
+      title = 'No reviewers assigned to this pull request';
+    }
+
+    return `<span class="lozenge review-${escapeHtml(overall)}" title="${escapeHtml(title)}">${icon} <span>${escapeHtml(label)}</span></span>`;
+  }
+
+  function renderReviewersRow(reviewers) {
+    if (!reviewers || reviewers.length === 0) {
+      return `
+        <div class="pull-request-reviewers-row is-empty">
+          <span class="reviewers-label"><i class="fa-solid fa-users" aria-hidden="true"></i> Reviewers:</span>
+          <span class="no-reviewers-text">None assigned</span>
+        </div>`;
+    }
+
+    const chips = reviewers.map((reviewer) => {
+      const state = reviewer.state || 'pending';
+      let stateIcon = '';
+      let stateText = 'Pending';
+      let statusClass = 'is-pending';
+
+      if (state === 'approved') {
+        stateIcon = '<i class="fa-solid fa-check" aria-hidden="true"></i>';
+        stateText = 'Aprobó';
+        statusClass = 'is-approved';
+      } else if (state === 'changes_requested') {
+        stateIcon = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+        stateText = 'Cambios solicitados';
+        statusClass = 'is-changes-requested';
+      } else if (reviewer.hasParticipated) {
+        stateIcon = '<i class="fa-regular fa-comment-dots" aria-hidden="true"></i>';
+        stateText = 'Con comentarios';
+        statusClass = 'is-participated';
+      } else {
+        stateIcon = '<i class="fa-regular fa-clock" aria-hidden="true"></i>';
+        stateText = 'Sin revisar';
+        statusClass = 'is-pending';
+      }
+
+      const initials = (reviewer.displayName || 'Reviewer')
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0].toUpperCase())
+        .join('') || '?';
+
+      return `
+        <span class="reviewer-chip ${statusClass}" title="${escapeHtml(reviewer.displayName)}: ${stateText}">
+          <span class="chip-avatar">${escapeHtml(initials)}</span>
+          <span class="chip-name">${escapeHtml(reviewer.displayName)}</span>
+          <span class="chip-status">${stateIcon} ${escapeHtml(stateText)}</span>
+        </span>`;
+    }).join('');
+
+    return `
+      <div class="pull-request-reviewers-row">
+        <span class="reviewers-label"><i class="fa-solid fa-users" aria-hidden="true"></i> Reviewers:</span>
+        <div class="reviewer-chips-list">
+          ${chips}
+        </div>
+      </div>`;
   }
 
   function renderBuild(build) {
@@ -458,26 +647,15 @@
     return `<span class="${className}">${label}</span>`;
   }
 
-  function renderReviewers(reviewers) {
-    if (reviewers.length === 0) return '';
-    const avatars = reviewers.slice(0, 4).map((reviewer) => {
-      const initials = reviewer.displayName
-        .split(/\s+/)
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0].toUpperCase())
-        .join('') || '?';
-      return `<span class="avatar review-${escapeHtml(reviewer.state)}" title="${escapeHtml(reviewer.displayName)}">${escapeHtml(initials)}</span>`;
-    }).join('');
-    return `<span class="reviewers">${avatars}</span>`;
-  }
-
   function filterPullRequests(pullRequests, viewState) {
     const query = viewState.searchQuery.trim().toLowerCase();
     return pullRequests.filter((pullRequest) => {
       if (!pullRequestMatchesSelectedUsers(pullRequest, viewState)) return false;
       if (viewState.attentionOnly && !needsAttention(pullRequest)) return false;
       if (!query) return true;
+      const reviewerNames = (pullRequest.review?.reviewers || []).map((r) => r.displayName).join(' ');
+      const conflictTerms = pullRequest.hasConflict ? 'conflict conflicted' : 'clean no conflict';
+      const approvalTerms = `${pullRequest.review?.overall || ''} ${pullRequest.review?.label || ''}`;
       const haystack = [
         pullRequest.title,
         pullRequest.author?.displayName,
@@ -485,13 +663,18 @@
         pullRequest.destinationBranch,
         pullRequest.id,
         pullRequest.repositorySlug,
+        reviewerNames,
+        conflictTerms,
+        approvalTerms,
       ].join(' ').toLowerCase();
       return haystack.includes(query);
     });
   }
 
   function needsAttention(pullRequest) {
-    return pullRequest.build?.overall === 'FAILED' || pullRequest.review?.overall === 'changes_requested';
+    return pullRequest.build?.overall === 'FAILED'
+      || pullRequest.review?.overall === 'changes_requested'
+      || Boolean(pullRequest.hasConflict);
   }
 
   function initialSelectedUserIds(pageConfig) {
@@ -653,5 +836,248 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  }
+
+  let cachedOpenPRs = [];
+
+  async function handleTeamsExport(elements, viewState, pageConfig) {
+    const originalContent = elements.teamsCopyButton.innerHTML;
+    elements.teamsCopyButton.disabled = true;
+    elements.teamsCopyButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> <span>Generando…</span>';
+
+    try {
+      cachedOpenPRs = await fetchOpenPRsForExport(viewState);
+      const options = {
+        includeDrafts: elements.teamsIncludeDrafts.checked,
+        onlyConflicts: elements.teamsOnlyConflicts.checked,
+        onlyUnreviewed: elements.teamsOnlyUnreviewed.checked,
+        includeDetails: elements.teamsIncludeDetails.checked,
+      };
+
+      const result = buildTeamsMessage(cachedOpenPRs, viewState, pageConfig, options);
+
+      const copied = await copyToClipboard(result.markdown, result.html);
+
+      elements.teamsCopyButton.classList.add('is-copied');
+      elements.teamsCopyButton.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i> <span>¡Copiado!</span>';
+      setTimeout(() => {
+        elements.teamsCopyButton.classList.remove('is-copied');
+        elements.teamsCopyButton.innerHTML = originalContent;
+      }, 2500);
+
+      elements.teamsMessageText.value = result.markdown;
+      elements.teamsMessageText.dataset.html = result.html;
+      elements.modalFooterStats.textContent = `${result.total} PRs abiertos · ${result.repoCount} repos · ${result.unreviewedCount} sin review · ${result.conflictsCount} con conflictos`;
+      elements.modalAlertText.textContent = copied
+        ? '¡Mensaje copiado al portapapeles! Listo para pegar en Microsoft Teams.'
+        : 'Selecciona y copia el texto a continuación:';
+      elements.teamsModal.hidden = false;
+      elements.teamsMessageText.focus();
+      elements.teamsMessageText.select();
+    } catch (error) {
+      alert(`Error al generar mensaje para Teams: ${error.message}`);
+      elements.teamsCopyButton.innerHTML = originalContent;
+    } finally {
+      elements.teamsCopyButton.disabled = false;
+    }
+  }
+
+  function refreshTeamsModal(elements, viewState, pageConfig) {
+    const options = {
+      includeDrafts: elements.teamsIncludeDrafts.checked,
+      onlyConflicts: elements.teamsOnlyConflicts.checked,
+      onlyUnreviewed: elements.teamsOnlyUnreviewed.checked,
+      includeDetails: elements.teamsIncludeDetails.checked,
+    };
+    const result = buildTeamsMessage(cachedOpenPRs, viewState, pageConfig, options);
+    elements.teamsMessageText.value = result.markdown;
+    elements.teamsMessageText.dataset.html = result.html;
+    elements.modalFooterStats.textContent = `${result.total} PRs abiertos · ${result.repoCount} repos · ${result.unreviewedCount} sin review · ${result.conflictsCount} con conflictos`;
+  }
+
+  function flashModalAlert(elements, text) {
+    elements.modalAlertText.textContent = text;
+    elements.modalCopyAlert.style.animation = 'none';
+    void elements.modalCopyAlert.offsetWidth;
+    elements.modalCopyAlert.style.animation = 'pulse 0.6s ease';
+  }
+
+  async function fetchOpenPRsForExport(viewState) {
+    if (viewState.pullRequestState === 'OPEN' && viewState.board?.repositories) {
+      const allPRs = [];
+      for (const repo of viewState.board.repositories) {
+        if (Array.isArray(repo.pullRequests)) {
+          allPRs.push(...repo.pullRequests);
+        }
+      }
+      return allPRs;
+    }
+
+    const parameters = new URLSearchParams({ state: 'OPEN' });
+    if (viewState.selectedRepository) {
+      parameters.set('repository', viewState.selectedRepository);
+    }
+    const response = await fetch(`/api/bitbucket/status?${parameters}`);
+    if (!response.ok) {
+      throw new Error(`Bitbucket status failed (${response.status})`);
+    }
+    const board = await response.json();
+    const allPRs = [];
+    for (const repo of (board.repositories || [])) {
+      if (Array.isArray(repo.pullRequests)) {
+        allPRs.push(...repo.pullRequests);
+      }
+    }
+    return allPRs;
+  }
+
+  function buildTeamsMessage(pullRequests, viewState, pageConfig, options) {
+    const list = pullRequests.filter((pr) => {
+      if (!pullRequestMatchesSelectedUsers(pr, viewState)) return false;
+      if (!options.includeDrafts && pr.draft) return false;
+      if (options.onlyConflicts && !pr.hasConflict) return false;
+      if (options.onlyUnreviewed && pr.hasBeenReviewed) return false;
+      return true;
+    });
+
+    // Ordenados de los más viejos a los más nuevos (createdOn ascendente)
+    list.sort((a, b) => Date.parse(a.createdOn || 0) - Date.parse(b.createdOn || 0));
+
+    // Agrupados por repositorio (repos con el PR más viejo primero)
+    const groupedMap = new Map();
+    for (const pr of list) {
+      const repoSlug = pr.repositorySlug || 'sin-repo';
+      if (!groupedMap.has(repoSlug)) {
+        groupedMap.set(repoSlug, []);
+      }
+      groupedMap.get(repoSlug).push(pr);
+    }
+    const groups = Array.from(groupedMap.entries());
+
+    const total = list.length;
+    const repoCount = groups.length;
+    const conflictsCount = list.filter((pr) => pr.hasConflict).length;
+    const approvedCount = list.filter((pr) => pr.review?.overall === 'approved').length;
+    const unreviewedCount = list.filter((pr) => !pr.hasBeenReviewed).length;
+
+    const selectedUsers = viewState.selectedUserIds || [];
+    const availableUsersCount = (viewState.availableUserIds || []).length;
+    const isFilteredByUser = selectedUsers.length > 0 && selectedUsers.length < availableUsersCount;
+    const userFilterLabel = isFilteredByUser ? selectedUsers.join(', ') : '';
+
+    function formatTimeOpenLabel(isoDate) {
+      const ms = Date.parse(isoDate || '');
+      if (Number.isNaN(ms)) return 'fecha desconocida';
+      const diffMs = Math.max(0, Date.now() - ms);
+      const hours = Math.floor(diffMs / (1000 * 60 * 60));
+      const days = Math.floor(hours / 24);
+      if (days >= 2) return `hace ${days} días`;
+      if (days === 1) return 'hace 1 día';
+      if (hours >= 2) return `hace ${hours} horas`;
+      if (hours === 1) return 'hace 1 hora';
+      const minutes = Math.max(1, Math.floor(diffMs / (1000 * 60)));
+      return minutes === 1 ? 'hace 1 minuto' : `hace ${minutes} minutos`;
+    }
+
+    function formatCompactDetails(pr) {
+      const parts = [];
+      if (pr.author?.displayName) parts.push(`👤 ${pr.author.displayName}`);
+      if (pr.hasConflict) parts.push('⚠️ Conflicto');
+      const overall = pr.review?.overall;
+      if (overall === 'approved') parts.push('✅ Aprobado');
+      else if (overall === 'partially_approved') parts.push(`🟡 Aprob. ${pr.review.approvedCount}/${pr.review.reviewerCount}`);
+      else if (overall === 'changes_requested') parts.push('❌ Cambios solicitados');
+      else if (!pr.hasBeenReviewed) parts.push('⏳ Sin review');
+      return parts.join(' · ');
+    }
+
+    const mdHeader = `📢 **Pull Requests Abiertos (${total})**`
+      + (userFilterLabel ? ` · 👤 ${userFilterLabel}` : '')
+      + '\n\n';
+
+    const mdSections = groups.map(([repoSlug, prs]) => {
+      const prLines = prs.map((pr) => {
+        const draftTag = pr.draft ? ' `[DRAFT]`' : '';
+        const ageStr = formatTimeOpenLabel(pr.createdOn);
+        const detailSuffix = options.includeDetails ? ` (${formatCompactDetails(pr)})` : '';
+        return `- **[#${pr.id} - ${pr.title}](${pr.htmlUrl})**${draftTag} — abierto ${ageStr}${detailSuffix}`;
+      }).join('\n');
+      return `📦 **${repoSlug}** (${prs.length})\n${prLines}`;
+    });
+
+    const mdBody = groups.length > 0
+      ? mdSections.join('\n\n')
+      : '🎉 *¡No hay pull requests abiertos pendientes!*';
+
+    const markdown = mdHeader + mdBody;
+
+    const htmlSections = groups.map(([repoSlug, prs]) => {
+      const itemsHtml = prs.map((pr) => {
+        const draftBadge = pr.draft
+          ? ' <span style="background:#fff7d6;color:#7f5f01;padding:1px 4px;border-radius:3px;font-size:0.75rem;">DRAFT</span>'
+          : '';
+        const ageStr = formatTimeOpenLabel(pr.createdOn);
+        const detailSuffix = options.includeDetails
+          ? ` <span style="color:#626f86;">(${escapeHtml(formatCompactDetails(pr))})</span>`
+          : '';
+        return `<li><strong><a href="${escapeHtml(pr.htmlUrl)}">#${pr.id} - ${escapeHtml(pr.title)}</a></strong>${draftBadge} — <em>abierto ${escapeHtml(ageStr)}</em>${detailSuffix}</li>`;
+      }).join('');
+      return `<p><strong>📦 ${escapeHtml(repoSlug)} (${prs.length})</strong></p><ul>${itemsHtml}</ul>`;
+    }).join('');
+
+    const html = `<p>📢 <strong>Pull Requests Abiertos (${total})</strong>`
+      + (userFilterLabel ? ` · 👤 ${escapeHtml(userFilterLabel)}` : '')
+      + `</p>`
+      + (groups.length > 0 ? htmlSections : '<p>🎉 <em>¡No hay pull requests abiertos pendientes!</em></p>');
+
+    return {
+      markdown,
+      html,
+      total,
+      repoCount,
+      conflictsCount,
+      approvedCount,
+      unreviewedCount,
+    };
+  }
+
+  async function copyToClipboard(text, html) {
+    if (navigator.clipboard && window.ClipboardItem && html) {
+      try {
+        const plainBlob = new Blob([text], { type: 'text/plain' });
+        const htmlBlob = new Blob([html], { type: 'text/html' });
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/plain': plainBlob,
+            'text/html': htmlBlob,
+          }),
+        ]);
+        return true;
+      } catch {
+        // Fallback to writeText below
+      }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        // Fallback
+      }
+    }
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return successful;
+    } catch {
+      return false;
+    }
   }
 }());

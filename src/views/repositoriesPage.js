@@ -69,6 +69,8 @@ export function renderRepositoriesPage(page) {
       <a href="/">Tickets</a>
       <a href="/repositories" class="is-active" aria-current="page">Pull requests</a>
       <a href="/activity">User Activity</a>
+      <a href="/reports">Team Reports</a>
+      <a href="/releases">Releases</a>
     </nav>
     <div class="topbar-status">
       <button id="refresh-button" class="button button-quiet" type="button">Refresh</button>
@@ -102,6 +104,14 @@ export function renderRepositoriesPage(page) {
           <h2 id="content-title">All repositories</h2>
         </div>
         <div class="content-actions">
+          <a class="button button-quiet" href="/reports" title="Ver reporte comparativo de rendimiento del equipo">
+            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+            <span>Team Reports</span>
+          </a>
+          <button id="teams-copy-button" class="button button-teams" type="button" title="Copiar mensaje con PRs abiertos agrupados por repositorio para Teams">
+            <i class="fa-solid fa-clipboard-list" aria-hidden="true"></i>
+            <span>Copiar para Teams</span>
+          </button>
           <a id="bitbucket-list-link" class="text-link" href="https://bitbucket.org/${workspace}" target="_blank" rel="noopener">View on Bitbucket</a>
           <a id="open-bitbucket" class="button button-primary" href="https://bitbucket.org/${workspace}" target="_blank" rel="noopener">Open Bitbucket</a>
         </div>
@@ -132,6 +142,56 @@ export function renderRepositoriesPage(page) {
       </div>
       <p id="board-footnote" class="footnote"></p>
     </main>
+  </div>
+
+  <div id="teams-modal" class="modal-overlay" hidden>
+    <div class="modal-card" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-clipboard-list modal-icon" aria-hidden="true"></i>
+          <div>
+            <h3 id="modal-title">Mensaje para Teams · PRs Abiertos</h3>
+            <p class="modal-subtitle" id="modal-subtitle">Agrupados por repositorio, del más antiguo al más reciente</p>
+          </div>
+        </div>
+        <button id="modal-close-btn" class="modal-close" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-alert is-success" id="modal-copy-alert">
+          <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+          <span id="modal-alert-text">¡Mensaje copiado al portapapeles! Listo para pegar en Teams.</span>
+        </div>
+        <div class="modal-options">
+          <label class="modal-option-checkbox">
+            <input type="checkbox" id="teams-include-drafts">
+            <span>Incluir borradores (Drafts)</span>
+          </label>
+          <label class="modal-option-checkbox">
+            <input type="checkbox" id="teams-only-conflicts">
+            <span>Solo con conflictos</span>
+          </label>
+          <label class="modal-option-checkbox">
+            <input type="checkbox" id="teams-only-unreviewed">
+            <span>Solo sin review aún</span>
+          </label>
+          <label class="modal-option-checkbox">
+            <input type="checkbox" id="teams-include-details">
+            <span>Incluir detalles (autor, review y conflictos)</span>
+          </label>
+        </div>
+        <textarea id="teams-message-text" class="modal-textarea" rows="12" spellcheck="false"></textarea>
+      </div>
+      <div class="modal-footer">
+        <span class="modal-footer-stats" id="modal-footer-stats"></span>
+        <div class="modal-footer-actions">
+          <button id="modal-close-action" class="button button-quiet" type="button">Cerrar</button>
+          <button id="modal-copy-action" class="button button-primary" type="button">
+            <i class="fa-solid fa-copy" aria-hidden="true"></i>
+            <span id="modal-copy-label">Copiar</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script id="repository-page-config" type="application/json">${clientConfig}</script>

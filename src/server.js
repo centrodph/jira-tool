@@ -7,6 +7,8 @@ import { JiraClient } from './jiraClient.js';
 import { formatIssueToMarkdown } from './markdownFormatter.js';
 import { saveIssueToMarkdownFile } from './fileWriter.js';
 import { registerBitbucketRoutes } from './bitbucketRoutes.js';
+import { registerReportRoutes } from './reportRoutes.js';
+import { registerJiraMcpHttpRoute } from './mcp/jiraMcp.js';
 
 const app = express();
 const config = getConfig();
@@ -17,6 +19,8 @@ const PORT = process.env.PORT || 3099;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 registerBitbucketRoutes(app);
+registerReportRoutes(app);
+registerJiraMcpHttpRoute(app, { jiraClient: client, config });
 
 // Serve static tickets folder (for attachments and direct access)
 app.use('/tickets', express.static(config.outputDir));
@@ -542,6 +546,8 @@ app.get('/', (req, res) => {
       <a href="/" class="active" aria-current="page">Tickets</a>
       <a href="/repositories">Pull requests</a>
       <a href="/activity">User Activity</a>
+      <a href="/reports">Team Reports</a>
+      <a href="/releases">Releases</a>
     </nav>
     <div class="jira-url">
       <i class="fa-solid fa-link"></i> ${config.baseUrl}
@@ -806,7 +812,9 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`\n🚀 Jira Markdown Web Application is running!`);
   console.log(`👉 Open in your browser: http://localhost:${PORT}`);
-  console.log(`👉 Repository status: http://localhost:${PORT}/repositories\n`);
+  console.log(`👉 Repository status: http://localhost:${PORT}/repositories`);
+  console.log(`👉 Release tracker: http://localhost:${PORT}/releases`);
+  console.log(`👉 Jira MCP (Streamable HTTP): http://localhost:${PORT}/mcp\n`);
 }).on('error', (error) => {
   if (error.code === 'EADDRINUSE') {
     console.error(`Port ${PORT} is already in use. Stop the other process or choose a different PORT.`);

@@ -169,6 +169,11 @@ describe('BitbucketActivityService', () => {
     assert.equal(result.byRepository[0].linesAdded, 100);
     assert.equal(result.byRepository[0].linesRemoved, 20);
     assert.equal(result.byRepository[0].commits, 1);
+
+    assert.equal(result.pullRequests.length, 2);
+    assert.ok(result.pullRequests[0].review);
+    assert.ok(result.pullRequests[0].conflict);
+    assert.equal(result.pullRequests[0].hasConflict, false);
   });
 
   test('filters by specific repository when requested', async () => {

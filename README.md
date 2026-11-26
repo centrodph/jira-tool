@@ -217,4 +217,66 @@ Initial requirements finalized.
 ```bash
 npm test
 ```
-Runs unit tests validating ADF parsing, markdown conversion, and YAML frontmatter generation.
+Runs unit tests validating ADF parsing, markdown conversion, YAML frontmatter generation, Bitbucket dashboards, and the Jira MCP server.
+
+---
+
+## 🤖 Jira MCP Server (Cursor & Antigravity / AGY)
+
+This repository exposes a **Model Context Protocol (MCP)** server for Jira Cloud so AI agents in **Cursor** and **Antigravity (AGY)** can read and execute Jira actions directly using your `.env` credentials.
+
+### Available MCP Tools
+- **Read / Discovery**: `jira_whoami`, `jira_get_issue`, `jira_search_issues`, `jira_list_projects`, `jira_get_project_issue_types`, `jira_search_users`, `jira_get_transitions`, `jira_get_comments`
+- **Write / Actions**: `jira_create_issue`, `jira_update_issue`, `jira_transition_issue`, `jira_add_comment`, `jira_assign_issue`, `jira_link_issues`, `jira_log_work`, `jira_export_issue_markdown`
+
+### One-Command Installation (Recommended — Stdio)
+Install into both **Cursor** (`~/.cursor/mcp.json`) and **Antigravity / AGY** (`~/.gemini/config/mcp_config.json`), preserving any existing MCP servers:
+
+```bash
+# Preview changes without writing files
+node scripts/install-mcp.js --all --dry-run
+
+# Install on both Cursor and AGY
+npm run mcp:install
+
+# Or install individually
+npm run mcp:install:cursor
+npm run mcp:install:agy
+
+# Uninstall from both
+npm run mcp:uninstall
+```
+
+> By default, the installer registers a stdio server (`tool-jira`) pointing to this repo's `src/mcpServer.js`, which automatically loads `JIRA_BASE_URL`, `JIRA_EMAIL`, and `JIRA_API_TOKEN` from this repository's `.env` (keeping secrets out of global config files). Pass `--embed-env` if you want to embed the env vars directly into the MCP JSON file.
+
+### Manual Configuration
+
+#### Cursor (`~/.cursor/mcp.json` or `.cursor/mcp.json`)
+```json
+{
+  "mcpServers": {
+    "tool-jira": {
+      "command": "node",
+      "args": ["/absolute/path/to/toolJira/src/mcpServer.js"]
+    }
+  }
+}
+```
+
+#### Antigravity / AGY (`~/.gemini/config/mcp_config.json`)
+```json
+{
+  "mcpServers": {
+    "tool-jira": {
+      "command": "node",
+      "args": ["/absolute/path/to/toolJira/src/mcpServer.js"]
+    }
+  }
+}
+```
+
+#### Optional: Streamable HTTP Transport
+When running `npm run server`, the server also exposes a stateless Streamable HTTP MCP endpoint at `http://localhost:3099/mcp`:
+```bash
+node scripts/install-mcp.js --all --transport http
+```

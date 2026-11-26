@@ -1,5 +1,8 @@
 import { BITBUCKET_API_ROOT, BITBUCKET_MAX_PAGES, BITBUCKET_PAGE_LENGTH, BITBUCKET_REQUEST_TIMEOUT_MS } from './bitbucketConstants.js';
 import { BitbucketRequestError, createBitbucketHttpError } from './bitbucketErrors.js';
+import { createLogger } from './logger.js';
+
+const defaultLogger = createLogger('bitbucket-client');
 
 /**
  * Thin client for the Bitbucket Cloud REST endpoints the status board needs.
@@ -9,14 +12,14 @@ import { BitbucketRequestError, createBitbucketHttpError } from './bitbucketErro
  */
 export class BitbucketClient {
   /**
-   * @param {{ email: string, apiToken: string, logger: { info: Function, warn: Function, error: Function }, fetchImpl?: typeof fetch, timeoutMs?: number }} options
+   * @param {{ email: string, apiToken: string, logger?: { info: Function, warn: Function, error: Function }, fetchImpl?: typeof fetch, timeoutMs?: number }} options
    */
   constructor(options) {
     if (!options.email || !options.apiToken) {
       throw new BitbucketRequestError('Bitbucket credentials are missing.', { statusCode: 503 });
     }
 
-    this.logger = options.logger;
+    this.logger = options.logger || defaultLogger;
     this.fetchImpl = options.fetchImpl || fetch;
     this.timeoutMs = options.timeoutMs || BITBUCKET_REQUEST_TIMEOUT_MS;
     // Basic auth is the form Atlassian API tokens use against Bitbucket Cloud.
@@ -32,6 +35,12 @@ export class BitbucketClient {
       pagelen: String(BITBUCKET_PAGE_LENGTH),
       sort: '-updated_on',
     });
+    // Bitbucket Cloud list endpoint omits participants and reviewers unless explicitly requested in fields!
+    if (query.fields) {
+      parameters.set('fields', query.fields);
+    } else {
+      parameters.set('fields', '+values.participants,+values.reviewers');
+    }
     if (Array.isArray(query.states)) {
       for (const state of query.states) {
         parameters.append('state', state);
@@ -46,6 +55,28 @@ export class BitbucketClient {
       maxPages: query.maxPages || BITBUCKET_MAX_PAGES,
       stopPredicate: query.stopPredicate,
     });
+  }
+
+  /**
+   * Fetches full details for a single pull request (which always includes reviewers and participants).
+   * @param {string} workspace
+   * @param {string} repositorySlug
+   * @param {number|string} pullRequestId
+   * @returns {Promise<object|null>}
+   */
+  async getPullRequest(workspace, repositorySlug, pullRequestId) {
+    const path = `/repositories/${encodeURIComponent(workspace)}/${encodeURIComponent(repositorySlug)}/pullrequests/${encodeURIComponent(pullRequestId)}`;
+    try {
+      return await this.getJson(`${BITBUCKET_API_ROOT}${path}`, repositorySlug);
+    } catch (error) {
+      this.logger.warn('Could not load pull request details', {
+        repositorySlug,
+        pullRequestId,
+        statusCode: error.statusCode || null,
+        message: error.message,
+      });
+      return null;
+    }
   }
 
   /**
@@ -97,6 +128,40 @@ export class BitbucketClient {
   }
 
   /**
+   * Checks for merge conflicts in a pull request.
+   * @param {string} workspace
+   * @param {string} repositorySlug
+   * @param {number|string} pullRequestId
+   * @returns {Promise<{ hasConflict: boolean, conflictCount: number, conflictingFiles: string[] }>}
+   */
+  async getPullRequestConflicts(workspace, repositorySlug, pullRequestId) {
+    const path = `/repositories/${encodeURIComponent(workspace)}/${encodeURIComponent(repositorySlug)}/pullrequests/${encodeURIComponent(pullRequestId)}/conflicts`;
+    try {
+      const payload = await this.getJson(`${BITBUCKET_API_ROOT}${path}`, repositorySlug);
+      const values = Array.isArray(payload?.values) ? payload.values : [];
+      const conflictingFiles = values
+        .map((entry) => entry?.path || entry?.escaped_path || entry?.name || '')
+        .filter(Boolean);
+      return {
+        hasConflict: values.length > 0,
+        conflictCount: values.length,
+        conflictingFiles,
+      };
+    } catch (error) {
+      if (error.statusCode === 409) {
+        return { hasConflict: true, conflictCount: 1, conflictingFiles: [] };
+      }
+      this.logger.warn('Could not check PR conflicts', {
+        repositorySlug,
+        pullRequestId,
+        statusCode: error.statusCode || null,
+        message: error.message,
+      });
+      return { hasConflict: false, conflictCount: 0, conflictingFiles: [] };
+    }
+  }
+
+  /**
    * Newest pipelines first, so the first match for a pull request is its latest run.
    * @param {{ workspace: string, repositorySlug: string }} query
    * @returns {Promise<{ values: object[], truncated: boolean }>}
@@ -111,6 +176,70 @@ export class BitbucketClient {
       repositorySlug: query.repositorySlug,
       maxPages: 1,
     });
+  }
+
+  /**
+   * Lists release branches (`refs/branches` filtered by `name ~ "release/"`).
+   * @param {{ workspace: string, repositorySlug: string, prefix?: string, maxPages?: number }} query
+   * @returns {Promise<{ values: object[], truncated: boolean }>}
+   */
+  async listReleaseBranches(query) {
+    const prefix = query.prefix || 'release/';
+    const safePrefix = prefix.replace(/"/g, '');
+    const parameters = new URLSearchParams({
+      pagelen: '100',
+      q: `name ~ "${safePrefix}"`,
+    });
+    const path = `/repositories/${encodeURIComponent(query.workspace)}/${encodeURIComponent(query.repositorySlug)}/refs/branches?${parameters}`;
+    return this.collectPages(path, {
+      repositorySlug: query.repositorySlug,
+      maxPages: query.maxPages || 3,
+    });
+  }
+
+  /**
+   * Lists commits reachable from `include` (branch or commit) and not reachable from `excludes`.
+   * Used to identify when a release branch diverged from `main` or a previous release branch.
+   * @param {{ workspace: string, repositorySlug: string, include: string, excludes?: string[], maxPages?: number }} query
+   * @returns {Promise<{ values: object[], truncated: boolean }>}
+   */
+  async listBranchCommits(query) {
+    const parameters = new URLSearchParams({
+      pagelen: '100',
+      include: query.include,
+    });
+    for (const excludeRef of query.excludes || []) {
+      if (excludeRef) {
+        parameters.append('exclude', excludeRef);
+      }
+    }
+    const path = `/repositories/${encodeURIComponent(query.workspace)}/${encodeURIComponent(query.repositorySlug)}/commits?${parameters}`;
+    return this.collectPages(path, {
+      repositorySlug: query.repositorySlug,
+      maxPages: query.maxPages || 2,
+    });
+  }
+
+  /**
+   * Fetches metadata for a single commit by hash.
+   * @param {string} workspace
+   * @param {string} repositorySlug
+   * @param {string} commitHash
+   * @returns {Promise<object|null>}
+   */
+  async getCommit(workspace, repositorySlug, commitHash) {
+    const path = `/repositories/${encodeURIComponent(workspace)}/${encodeURIComponent(repositorySlug)}/commit/${encodeURIComponent(commitHash)}`;
+    try {
+      return await this.getJson(`${BITBUCKET_API_ROOT}${path}`, repositorySlug);
+    } catch (error) {
+      this.logger.warn('Could not load commit details', {
+        repositorySlug,
+        commitHash,
+        statusCode: error.statusCode || null,
+        message: error.message,
+      });
+      return null;
+    }
   }
 
   /**
@@ -226,9 +355,14 @@ export class BitbucketClient {
    */
   async readJsonBody(response) {
     if (typeof response.json === 'function') {
-      return response.json();
+      try {
+        return await response.json();
+      } catch {
+        // Fallback to text parsing
+      }
     }
-    const text = await response.text();
+    const text = typeof response.text === 'function' ? await response.text() : '';
+    if (!text || !text.trim()) return {};
     return JSON.parse(text);
   }
 

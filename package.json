@@ -5,13 +5,19 @@
   "type": "module",
   "main": "src/index.js",
   "bin": {
-    "jira-to-md": "./src/index.js"
+    "jira-to-md": "./src/index.js",
+    "jira-mcp": "./src/mcpServer.js"
   },
   "scripts": {
     "start": "node src/index.js",
     "server": "node src/server.js",
     "web": "node src/server.js",
     "fetch": "node src/index.js",
+    "mcp": "node src/mcpServer.js",
+    "mcp:install": "node scripts/install-mcp.js --all",
+    "mcp:install:cursor": "node scripts/install-mcp.js --cursor",
+    "mcp:install:agy": "node scripts/install-mcp.js --agy",
+    "mcp:uninstall": "node scripts/install-mcp.js --all --uninstall",
     "test": "node --test"
   },
   "keywords": [
@@ -24,6 +30,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
@@ -32,6 +39,7 @@
     "ora": "^8.1.0",
     "prompts": "^2.4.2",
     "turndown": "^7.2.0",
-    "turndown-plugin-gfm": "^1.0.2"
+    "turndown-plugin-gfm": "^1.0.2",
+    "zod": "^4.6.7"
   }
 }

@@ -39,10 +39,16 @@ export function buildAuthorIdentityKeys(author) {
     author?.email,
     author?.account_id,
     author?.uuid,
+    author?.displayName,
+    author?.accountId,
+    author?.emailAddress,
     author?.user?.display_name,
     author?.user?.nickname,
     author?.user?.account_id,
     author?.user?.uuid,
+    author?.user?.displayName,
+    author?.user?.accountId,
+    author?.user?.emailAddress,
   ];
 
   for (const field of fields) {

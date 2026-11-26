@@ -1,8 +1,13 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Load environment variables from .env file
+const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+// Load environment variables from CWD .env first, then fallback to this project's .env
+// so MCP stdio servers launched from arbitrary directories (Cursor / AGY) still find credentials.
 dotenv.config();
+dotenv.config({ path: path.join(PROJECT_ROOT, '.env') });
 
 export function getConfig() {
   const baseUrl = (process.env.JIRA_BASE_URL || '').trim().replace(/\/+$/, '');
@@ -29,6 +34,6 @@ export function getConfig() {
     email,
     apiToken,
     authHeader,
-    outputDir: path.resolve(process.cwd(), outputDir),
+    outputDir: path.isAbsolute(outputDir) ? outputDir : path.resolve(PROJECT_ROOT, outputDir),
   };
 }

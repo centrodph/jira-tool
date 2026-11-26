@@ -110,37 +110,111 @@ function mapReviewer(participant) {
   }
 
   const user = participant.user || participant;
+  const participatedOn = participant.participated_on || participant.participatedOn || null;
+  const hasParticipated = Boolean(
+    participatedOn || state === 'approved' || state === 'changes_requested' || participant.approved
+  );
+
   return {
-    displayName: user.display_name || user.nickname || 'Reviewer',
+    displayName: user.display_name || user.displayName || user.nickname || 'Reviewer',
+    nickname: user.nickname || '',
+    accountId: user.account_id || user.uuid || '',
     avatarUrl: user.links?.avatar?.href || '',
     state,
+    participatedOn,
+    hasParticipated,
   };
 }
 
 /**
- * Reviewers carry the approval state. The plain reviewers array is only a
- * fallback when Bitbucket has not copied them into participants yet.
+ * Reviewers carry the approval state. Combines declared reviewers and
+ * participants so that all assigned reviewers are shown along with their
+ * approval or changes-requested status.
  * @param {object} rawPullRequest
- * @returns {{ displayName: string, avatarUrl: string, state: string }[]}
+ * @returns {{ displayName: string, avatarUrl: string, state: string, hasParticipated: boolean }[]}
  */
-function collectReviewers(rawPullRequest) {
+export function collectReviewers(rawPullRequest) {
   const participants = Array.isArray(rawPullRequest.participants) ? rawPullRequest.participants : [];
-  const reviewers = participants.filter((participant) => participant.role === 'REVIEWER');
-  if (reviewers.length > 0) {
-    return reviewers.map(mapReviewer);
+  const declaredReviewers = Array.isArray(rawPullRequest.reviewers) ? rawPullRequest.reviewers : [];
+
+  const authorKeys = rawPullRequest.author ? buildAuthorIdentityKeys(rawPullRequest.author) : [];
+  const authorKeysSet = new Set(authorKeys.map((k) => String(k).toLowerCase()));
+
+  // Map participant reviewer state by user identity
+  const participantByUserKey = new Map();
+  for (const participant of participants) {
+    const user = participant.user || participant;
+    const keys = [user.account_id, user.uuid, user.nickname, user.display_name, user.displayName].filter(Boolean);
+    for (const key of keys) {
+      participantByUserKey.set(String(key).toLowerCase(), participant);
+    }
   }
 
-  const declaredReviewers = Array.isArray(rawPullRequest.reviewers) ? rawPullRequest.reviewers : [];
-  return declaredReviewers.map(mapReviewer);
+  const collected = [];
+  const seenKeys = new Set();
+
+  function markSeen(user) {
+    const keys = [user.account_id, user.uuid, user.nickname, user.display_name, user.displayName].filter(Boolean);
+    for (const key of keys) {
+      seenKeys.add(String(key).toLowerCase());
+    }
+  }
+
+  function isSeen(user) {
+    const keys = [user.account_id, user.uuid, user.nickname, user.display_name, user.displayName].filter(Boolean);
+    return keys.some((key) => seenKeys.has(String(key).toLowerCase()));
+  }
+
+  // 1. Process declared reviewers
+  for (const declared of declaredReviewers) {
+    const user = declared.user || declared;
+    markSeen(user);
+    const keys = [user.account_id, user.uuid, user.nickname, user.display_name, user.displayName].filter(Boolean);
+    let matchedParticipant = null;
+    for (const key of keys) {
+      if (participantByUserKey.has(String(key).toLowerCase())) {
+        matchedParticipant = participantByUserKey.get(String(key).toLowerCase());
+        break;
+      }
+    }
+    const participantData = matchedParticipant ? { ...declared, ...matchedParticipant } : declared;
+    collected.push(mapReviewer(participantData));
+  }
+
+  // 2. Add any participant with role === 'REVIEWER' OR who approved / requested changes
+  for (const participant of participants) {
+    const user = participant.user || participant;
+    const userKeys = [user.account_id, user.uuid, user.nickname, user.display_name, user.displayName].filter(Boolean);
+    const isAuthor = userKeys.some((k) => authorKeysSet.has(String(k).toLowerCase()));
+
+    const isReviewerRole = String(participant.role || '').toUpperCase() === 'REVIEWER';
+    const hasReviewed = Boolean(
+      participant.approved
+      || participant.state === 'approved'
+      || participant.state === 'changes_requested'
+    );
+
+    if ((isReviewerRole || hasReviewed) && (!isAuthor || hasReviewed)) {
+      if (!isSeen(user)) {
+        markSeen(user);
+        collected.push(mapReviewer(participant));
+      }
+    }
+  }
+
+  return collected;
 }
 
 /**
- * @param {{ displayName: string, state: string }[]} reviewers
+ * @param {{ displayName: string, state: string, hasParticipated?: boolean }[]} reviewers
+ * @param {{ commentCount?: number }} [options]
  * @returns {object}
  */
-export function summarizeReview(reviewers) {
+export function summarizeReview(reviewers, options = {}) {
+  const commentCount = Number(options.commentCount) || 0;
   const approvedCount = reviewers.filter((reviewer) => reviewer.state === 'approved').length;
   const changesRequestedCount = reviewers.filter((reviewer) => reviewer.state === 'changes_requested').length;
+  const participatedCount = reviewers.filter((reviewer) => reviewer.hasParticipated).length;
 
   let overall = 'pending';
   if (changesRequestedCount > 0) {
@@ -153,24 +227,72 @@ export function summarizeReview(reviewers) {
     overall = 'no_reviewers';
   }
 
+  // Has this PR had a review?
+  const hasBeenReviewed = approvedCount > 0
+    || changesRequestedCount > 0
+    || participatedCount > 0
+    || commentCount > 0;
+
+  let reviewState = 'unreviewed';
+  let reviewStateLabel = 'Sin review aún';
+
+  if (approvedCount > 0 && approvedCount === reviewers.length && reviewers.length > 0) {
+    reviewState = 'reviewed_approved';
+    reviewStateLabel = 'Revisado (Aprobado)';
+  } else if (changesRequestedCount > 0) {
+    reviewState = 'reviewed_changes_requested';
+    reviewStateLabel = 'Revisado (Cambios solicitados)';
+  } else if (approvedCount > 0) {
+    reviewState = 'reviewed_partially_approved';
+    reviewStateLabel = `Revisado (${approvedCount}/${reviewers.length} aprobados)`;
+  } else if (participatedCount > 0 || commentCount > 0) {
+    reviewState = 'reviewed_with_feedback';
+    reviewStateLabel = commentCount > 0 ? `Revisado (${commentCount} comentarios)` : 'Revisado (Con comentarios)';
+  } else if (reviewers.length === 0) {
+    reviewState = 'no_reviewers';
+    reviewStateLabel = 'Sin revisores';
+  }
+
   return {
     overall,
     label: REVIEW_LABELS[overall],
+    hasApproval: approvedCount > 0,
+    isFullyApproved: reviewers.length > 0 && approvedCount === reviewers.length,
     approvedCount,
     changesRequestedCount,
     reviewerCount: reviewers.length,
+    hasBeenReviewed,
+    reviewState,
+    reviewStateLabel,
     reviewers,
   };
 }
 
 /**
  * @param {object} rawPullRequest
- * @param {{ workspace: string, repositorySlug: string, pipelineByPullRequestId: Map<number, object> }} context
+ * @param {{ workspace: string, repositorySlug: string, pipelineByPullRequestId?: Map<number, object>, conflictByPullRequestId?: Map<number, object> }} context
  * @returns {object}
  */
-export function mapPullRequest(rawPullRequest, context) {
+export function mapPullRequest(rawPullRequest, context = {}) {
   const reviewers = collectReviewers(rawPullRequest);
-  const pipeline = context.pipelineByPullRequestId.get(rawPullRequest.id) || null;
+  const commentCount = Number(rawPullRequest.comment_count) || 0;
+  const review = summarizeReview(reviewers, { commentCount });
+  const pipeline = context.pipelineByPullRequestId?.get(rawPullRequest.id) || null;
+  const conflictInfo = context.conflictByPullRequestId?.get(rawPullRequest.id) || null;
+
+  const hasConflict = Boolean(
+    conflictInfo?.hasConflict
+    || rawPullRequest.has_conflict
+    || rawPullRequest.hasConflict
+    || (Array.isArray(rawPullRequest.conflicts) && rawPullRequest.conflicts.length > 0)
+  );
+  const conflictCount = Number(
+    conflictInfo?.conflictCount
+    || (Array.isArray(rawPullRequest.conflicts) ? rawPullRequest.conflicts.length : (hasConflict ? 1 : 0))
+  );
+  const conflictingFiles = conflictInfo?.conflictingFiles
+    || (Array.isArray(rawPullRequest.conflicts) ? rawPullRequest.conflicts : []);
+
   const author = rawPullRequest.author || {};
   const pullRequestId = rawPullRequest.id;
   const htmlUrl = rawPullRequest.links?.html?.href
@@ -182,7 +304,7 @@ export function mapPullRequest(rawPullRequest, context) {
     title: rawPullRequest.title || `Pull request #${pullRequestId}`,
     state: rawPullRequest.state || 'OPEN',
     draft: Boolean(rawPullRequest.draft),
-    commentCount: Number(rawPullRequest.comment_count) || 0,
+    commentCount,
     taskCount: Number(rawPullRequest.task_count) || 0,
     createdOn: rawPullRequest.created_on || '',
     updatedOn: rawPullRequest.updated_on || '',
@@ -197,8 +319,17 @@ export function mapPullRequest(rawPullRequest, context) {
     },
     sourceBranch: rawPullRequest.source?.branch?.name || 'unknown',
     destinationBranch: rawPullRequest.destination?.branch?.name || 'unknown',
-    review: summarizeReview(reviewers),
+    review,
+    hasBeenReviewed: review.hasBeenReviewed,
+    reviewState: review.reviewState,
+    reviewStateLabel: review.reviewStateLabel,
     build: summarizePipeline(pipeline, context),
+    hasConflict,
+    conflict: {
+      hasConflict,
+      count: conflictCount,
+      files: conflictingFiles,
+    },
   };
 }
 
@@ -238,6 +369,8 @@ export function summarizeRepository(pullRequests) {
     changesRequestedCount: openPullRequests.filter((pullRequest) => pullRequest.review.overall === 'changes_requested').length,
     buildFailedCount: openPullRequests.filter((pullRequest) => pullRequest.build.overall === 'FAILED').length,
     buildInProgressCount: openPullRequests.filter((pullRequest) => pullRequest.build.overall === 'INPROGRESS').length,
+    conflictCount: openPullRequests.filter((pullRequest) => pullRequest.hasConflict).length,
+    unreviewedCount: openPullRequests.filter((pullRequest) => !pullRequest.hasBeenReviewed).length,
     latestActivityAt: latestActivityAt || null,
   };
 }

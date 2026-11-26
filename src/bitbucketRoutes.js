@@ -12,13 +12,17 @@ import { JiraClient } from './jiraClient.js';
 import { createLogger } from './logger.js';
 import { renderRepositoriesPage } from './views/repositoriesPage.js';
 import { renderActivityPage } from './views/activityPage.js';
+import { renderReleasesPage } from './views/releasesPage.js';
 import { BitbucketActivityService } from './bitbucketActivityService.js';
+import { BitbucketReleaseService } from './bitbucketReleaseService.js';
 
 const logger = createLogger('bitbucket-status');
 let cachedService = null;
 let cachedSignature = '';
 let cachedActivityService = null;
 let cachedActivitySignature = '';
+let cachedReleaseService = null;
+let cachedReleaseSignature = '';
 
 /**
  * Reads the board query. Unknown repositories are rejected so this route
@@ -48,6 +52,37 @@ export function parseStatusQuery(query, bitbucketConfig) {
   return {
     state,
     repositorySlug: repositorySlug || null,
+    bypassCache: refresh,
+  };
+}
+
+/**
+ * Validates query parameters for the release tracker endpoint.
+ * @param {object} query
+ * @param {{ repositories: string[] }} bitbucketConfig
+ * @returns {{ repositorySlug: string|null, minorLimit: number, bypassCache: boolean }}
+ */
+export function parseReleaseQuery(query, bitbucketConfig) {
+  const repositorySlug = String(query.repository || '').trim();
+  if (repositorySlug && !REPOSITORY_SLUG_PATTERN.test(repositorySlug)) {
+    throw new BitbucketRequestError('Repository slug is not valid.', { statusCode: 400 });
+  }
+  if (repositorySlug && !bitbucketConfig.repositories.includes(repositorySlug)) {
+    throw new BitbucketRequestError(
+      `"${repositorySlug}" is not in the watched repository list.`,
+      { statusCode: 400 },
+    );
+  }
+
+  const rawMinors = query.minors !== undefined ? Number(query.minors) : 2;
+  if (!Number.isInteger(rawMinors) || rawMinors < 1 || rawMinors > 10) {
+    throw new BitbucketRequestError('Minor count must be an integer between 1 and 10.', { statusCode: 400 });
+  }
+
+  const refresh = query.refresh === 'true' || query.refresh === '1';
+  return {
+    repositorySlug: repositorySlug || null,
+    minorLimit: rawMinors,
     bypassCache: refresh,
   };
 }
@@ -125,6 +160,41 @@ function getActivityService(bitbucketConfig) {
 }
 
 /**
+ * @param {object} bitbucketConfig
+ * @returns {BitbucketReleaseService}
+ */
+function getReleaseService(bitbucketConfig) {
+  const signature = createHash('sha256')
+    .update([
+      bitbucketConfig.email,
+      bitbucketConfig.apiToken,
+      bitbucketConfig.workspace,
+      bitbucketConfig.repositories.join(','),
+    ].join('\n'))
+    .digest('hex');
+
+  if (!cachedReleaseService || cachedReleaseSignature !== signature) {
+    const client = new BitbucketClient({
+      email: bitbucketConfig.email,
+      apiToken: bitbucketConfig.apiToken,
+      logger,
+    });
+    cachedReleaseService = new BitbucketReleaseService({
+      client,
+      config: bitbucketConfig,
+      logger,
+    });
+    cachedReleaseSignature = signature;
+    logger.info('Prepared Bitbucket release service', {
+      workspace: bitbucketConfig.workspace,
+      repositoryCount: bitbucketConfig.repositories.length,
+    });
+  }
+
+  return cachedReleaseService;
+}
+
+/**
  * Resolves a BITBUCKET_USERS email to the Atlassian account that Bitbucket
  * stores on the pull request author. A lookup failure leaves name matching in place.
  * @returns {{ lookup: (identifier: string) => Promise<object|null> }}
@@ -139,7 +209,12 @@ function createJiraUserDirectory() {
         const exactEmailMatch = matches.find((user) => {
           return (user.emailAddress || '').toLowerCase() === normalizedIdentifier;
         });
-        const resolvedUser = exactEmailMatch || (matches.length === 1 ? matches[0] : null);
+        const namePart = normalizedIdentifier.split('@')[0].replace(/[._-]/g, ' ');
+        const nameMatch = matches.find((user) => {
+          const dName = (user.displayName || '').toLowerCase();
+          return dName.includes(namePart) || namePart.includes(dName);
+        });
+        const resolvedUser = exactEmailMatch || (matches.length === 1 ? matches[0] : null) || nameMatch;
         if (!resolvedUser) return null;
         return {
           accountId: resolvedUser.accountId || '',
@@ -182,6 +257,46 @@ export function registerBitbucketRoutes(app) {
       users: bitbucketConfig.users,
       refreshIntervalMs: bitbucketConfig.refreshIntervalMs,
     }));
+  });
+
+  app.get('/releases', (req, res) => {
+    const bitbucketConfig = getBitbucketConfig();
+    res.set('Cache-Control', 'no-store');
+    res.type('html').send(renderReleasesPage({
+      workspace: bitbucketConfig.workspace,
+      repositories: bitbucketConfig.repositories,
+      refreshIntervalMs: bitbucketConfig.refreshIntervalMs,
+      minorLimit: 2,
+    }));
+  });
+
+  app.get('/api/bitbucket/releases', async (req, res) => {
+    try {
+      const bitbucketConfig = getBitbucketConfig();
+      if (!bitbucketConfig.configured) {
+        throw new BitbucketRequestError(bitbucketConfig.configurationError, {
+          statusCode: 503,
+          instructions: bitbucketConfig.instructions,
+          tokenUrl: bitbucketConfig.tokenUrl,
+        });
+      }
+
+      const releaseQuery = parseReleaseQuery(req.query, bitbucketConfig);
+      const board = await getReleaseService(bitbucketConfig).getReleasesBoard(releaseQuery);
+      res.set('Cache-Control', 'no-store');
+      res.json(board);
+    } catch (error) {
+      const statusCode = error.statusCode || 500;
+      logger.error('Bitbucket releases request failed', {
+        statusCode,
+        message: error.message,
+      });
+      res.status(statusCode).json({
+        error: error.message || 'Unexpected Bitbucket releases error.',
+        instructions: error.instructions || [],
+        tokenUrl: error.tokenUrl || '',
+      });
+    }
   });
 
   app.get('/api/bitbucket/user-activity', async (req, res) => {

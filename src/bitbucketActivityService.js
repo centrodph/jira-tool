@@ -1,4 +1,5 @@
 import { REPOSITORY_FETCH_CONCURRENCY } from './bitbucketConstants.js';
+import { collectReviewers, summarizeReview } from './pullRequestStatus.js';
 import {
   createUserMatchers,
   pullRequestMatchesWatchedUsers,
@@ -231,6 +232,11 @@ export class BitbucketActivityService {
         4,
         async (rawPR) => {
           const diff = await this.getDiffstat(workspace, repositorySlug, rawPR.id, rawPR.state);
+          const reviewers = collectReviewers(rawPR);
+          const hasConflict = Boolean(
+            rawPR.has_conflict || rawPR.hasConflict || (Array.isArray(rawPR.conflicts) && rawPR.conflicts.length > 0)
+          );
+          const review = summarizeReview(reviewers, { commentCount: Number(rawPR.comment_count) || 0 });
           return {
             id: rawPR.id,
             title: rawPR.title,
@@ -251,6 +257,16 @@ export class BitbucketActivityService {
             },
             linesAdded: diff.linesAdded,
             linesRemoved: diff.linesRemoved,
+            review,
+            hasBeenReviewed: review.hasBeenReviewed,
+            reviewState: review.reviewState,
+            reviewStateLabel: review.reviewStateLabel,
+            hasConflict,
+            conflict: {
+              hasConflict,
+              count: hasConflict ? 1 : 0,
+              files: Array.isArray(rawPR.conflicts) ? rawPR.conflicts : [],
+            },
           };
         }
       );

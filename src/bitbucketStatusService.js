@@ -28,6 +28,7 @@ export class BitbucketStatusService {
     this.snapshotCache = new Map();
     this.snapshotRequests = new Map();
     this.userMatcherCache = null;
+    this.conflictCache = new Map();
   }
 
   /**
@@ -178,10 +179,45 @@ export class BitbucketStatusService {
         this.loadPipelines(location),
       ]);
       const pipelineByPullRequestId = indexPipelinesByPullRequestId(pipelineResult.values);
+      const conflictByPullRequestId = new Map();
+
+      if (pullRequestState === 'OPEN' || pullRequestState === 'DRAFT') {
+        const rawPRs = pullRequestPage.values || [];
+        await mapWithConcurrency(rawPRs, 3, async (rawPR) => {
+          if (!rawPR?.id) return;
+
+          // If reviewers and participants were omitted by Bitbucket in the list response, fetch single PR details
+          if (
+            rawPR.reviewers === undefined
+            && rawPR.participants === undefined
+            && typeof this.client?.getPullRequest === 'function'
+          ) {
+            try {
+              const details = await this.client.getPullRequest(location.workspace, repositorySlug, rawPR.id);
+              if (details) {
+                rawPR.reviewers = details.reviewers || [];
+                rawPR.participants = details.participants || [];
+                if (details.comment_count !== undefined && rawPR.comment_count === undefined) {
+                  rawPR.comment_count = details.comment_count;
+                }
+              }
+            } catch {
+              // Ignore fallback failure and continue
+            }
+          }
+
+          const conflict = await this.loadPullRequestConflict(location.workspace, repositorySlug, rawPR);
+          if (conflict) {
+            conflictByPullRequestId.set(rawPR.id, conflict);
+          }
+        });
+      }
+
       const pullRequests = pullRequestPage.values
         .map((rawPullRequest) => mapPullRequest(rawPullRequest, {
           ...location,
           pipelineByPullRequestId,
+          conflictByPullRequestId,
         }))
         .sort((left, right) => Date.parse(right.updatedOn || 0) - Date.parse(left.updatedOn || 0));
 
@@ -243,6 +279,51 @@ export class BitbucketStatusService {
   }
 
   /**
+   * @param {string} workspace
+   * @param {string} repositorySlug
+   * @param {object} rawPR
+   * @returns {Promise<{ hasConflict: boolean, conflictCount: number, conflictingFiles: string[] }>}
+   */
+  async loadPullRequestConflict(workspace, repositorySlug, rawPR) {
+    if (rawPR.has_conflict !== undefined || rawPR.hasConflict !== undefined) {
+      const hasConflict = Boolean(rawPR.has_conflict ?? rawPR.hasConflict);
+      return { hasConflict, conflictCount: hasConflict ? 1 : 0, conflictingFiles: [] };
+    }
+
+    if (Array.isArray(rawPR.conflicts)) {
+      return {
+        hasConflict: rawPR.conflicts.length > 0,
+        conflictCount: rawPR.conflicts.length,
+        conflictingFiles: rawPR.conflicts,
+      };
+    }
+
+    if (typeof this.client?.getPullRequestConflicts !== 'function') {
+      return { hasConflict: false, conflictCount: 0, conflictingFiles: [] };
+    }
+
+    const sourceHash = rawPR.source?.commit?.hash || rawPR.source?.branch?.name || '';
+    const destHash = rawPR.destination?.commit?.hash || rawPR.destination?.branch?.name || '';
+    const cacheKey = `${workspace}:${repositorySlug}:${rawPR.id}:${sourceHash}:${destHash}`;
+    const now = Date.now();
+    const cached = this.conflictCache.get(cacheKey);
+    if (cached && cached.expiresAtMs > now) {
+      return cached.value;
+    }
+
+    try {
+      const res = await this.client.getPullRequestConflicts(workspace, repositorySlug, rawPR.id);
+      this.conflictCache.set(cacheKey, {
+        expiresAtMs: now + 5 * 60 * 1000,
+        value: res,
+      });
+      return res;
+    } catch {
+      return { hasConflict: false, conflictCount: 0, conflictingFiles: [] };
+    }
+  }
+
+  /**
    * @param {object} snapshot
    * @returns {object}
    */
@@ -300,6 +381,8 @@ function summarizeCountsByUser(pullRequests) {
         changesRequestedCount: 0,
         buildFailedCount: 0,
         buildInProgressCount: 0,
+        conflictCount: 0,
+        unreviewedCount: 0,
       };
     }
     countsByUser[userId][fieldName] += 1;
@@ -317,6 +400,8 @@ function summarizeCountsByUser(pullRequests) {
       if (pullRequest.review?.overall === 'changes_requested') increment(userId, 'changesRequestedCount');
       if (pullRequest.build?.overall === 'FAILED') increment(userId, 'buildFailedCount');
       if (pullRequest.build?.overall === 'INPROGRESS') increment(userId, 'buildInProgressCount');
+      if (pullRequest.hasConflict) increment(userId, 'conflictCount');
+      if (!pullRequest.hasBeenReviewed) increment(userId, 'unreviewedCount');
     }
   }
 

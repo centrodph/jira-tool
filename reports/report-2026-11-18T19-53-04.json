@@ -1,0 +1,260 @@
+{
+  "id": "report-2026-11-18T19-53-04",
+  "title": "Team Performance Report · Últimos 30 días",
+  "createdAt": "2026-11-18T19:53:04.445Z",
+  "formattedDate": "18/11/2026 16:53",
+  "period": {
+    "days": 30,
+    "from": "19/10/2026",
+    "to": "18/11/2026",
+    "cutoffIso": "2026-10-19T19:53:04.445Z"
+  },
+  "teamSummary": {
+    "memberCount": 6,
+    "totalResolved": 0,
+    "avgResolvedPerMember": 0,
+    "resolvedByType": {
+      "story": 0,
+      "bug": 0,
+      "task": 0,
+      "other": 0
+    },
+    "totalInProgressHours": 0,
+    "avgInProgressHours": 0,
+    "avgInProgressFormatted": "0 h",
+    "totalQaBounces": 0,
+    "teamQaBounceRatePct": 0,
+    "totalCurrentWip": 0,
+    "totalPrsCreated": 168,
+    "totalPrsMerged": 140,
+    "totalPrsReviewed": 165,
+    "totalCommits": 331,
+    "totalLinesAdded": 0,
+    "totalLinesRemoved": 0,
+    "netLines": 0
+  },
+  "members": [
+    {
+      "identifier": "gerardo.perrucci.ext@intive.com",
+      "displayName": "Gerardo Perrucci",
+      "email": "gerardo.perrucci.ext@intive.com",
+      "jira": {
+        "resolvedCount": 0,
+        "resolvedByType": {
+          "story": 0,
+          "bug": 0,
+          "task": 0,
+          "other": 0
+        },
+        "totalInProgressHours": 0,
+        "avgInProgressHoursPerTicket": 0,
+        "totalInProgressFormatted": "0 h",
+        "avgInProgressFormatted": "0 h",
+        "qaBouncesCount": 0,
+        "ticketsPassedThroughQA": 0,
+        "qaBounceRatePct": 0,
+        "currentWipCount": 0,
+        "resolvedTickets": [],
+        "bouncedTickets": []
+      },
+      "bitbucket": {
+        "prsCreated": 35,
+        "prsMerged": 29,
+        "prsDeclined": 5,
+        "prsReviewed": 79,
+        "commits": 42,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": [
+        {
+          "label": "Top Reviewer",
+          "icon": "fa-magnifying-glass",
+          "type": "blue"
+        }
+      ]
+    },
+    {
+      "identifier": "victor.diaz@intive.com",
+      "displayName": "Victor Diaz",
+      "email": "victor.diaz@intive.com",
+      "jira": {
+        "resolvedCount": 0,
+        "resolvedByType": {
+          "story": 0,
+          "bug": 0,
+          "task": 0,
+          "other": 0
+        },
+        "totalInProgressHours": 0,
+        "avgInProgressHoursPerTicket": 0,
+        "totalInProgressFormatted": "0 h",
+        "avgInProgressFormatted": "0 h",
+        "qaBouncesCount": 0,
+        "ticketsPassedThroughQA": 0,
+        "qaBounceRatePct": 0,
+        "currentWipCount": 0,
+        "resolvedTickets": [],
+        "bouncedTickets": []
+      },
+      "bitbucket": {
+        "prsCreated": 33,
+        "prsMerged": 27,
+        "prsDeclined": 5,
+        "prsReviewed": 21,
+        "commits": 59,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": []
+    },
+    {
+      "identifier": "oscar.toro@intive.com",
+      "displayName": "Oscar Miguel Toro Torres",
+      "email": "oscar.toro@intive.com",
+      "jira": {
+        "resolvedCount": 0,
+        "resolvedByType": {
+          "story": 0,
+          "bug": 0,
+          "task": 0,
+          "other": 0
+        },
+        "totalInProgressHours": 0,
+        "avgInProgressHoursPerTicket": 0,
+        "totalInProgressFormatted": "0 h",
+        "avgInProgressFormatted": "0 h",
+        "qaBouncesCount": 0,
+        "ticketsPassedThroughQA": 0,
+        "qaBounceRatePct": 0,
+        "currentWipCount": 0,
+        "resolvedTickets": [],
+        "bouncedTickets": []
+      },
+      "bitbucket": {
+        "prsCreated": 39,
+        "prsMerged": 35,
+        "prsDeclined": 3,
+        "prsReviewed": 10,
+        "commits": 104,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": [
+        {
+          "label": "Code Champion",
+          "icon": "fa-rocket",
+          "type": "purple"
+        }
+      ]
+    },
+    {
+      "identifier": "gabriel.peralta@intive.com",
+      "displayName": "Gabriel Peralta",
+      "email": "gabriel.peralta@intive.com",
+      "jira": {
+        "resolvedCount": 0,
+        "resolvedByType": {
+          "story": 0,
+          "bug": 0,
+          "task": 0,
+          "other": 0
+        },
+        "totalInProgressHours": 0,
+        "avgInProgressHoursPerTicket": 0,
+        "totalInProgressFormatted": "0 h",
+        "avgInProgressFormatted": "0 h",
+        "qaBouncesCount": 0,
+        "ticketsPassedThroughQA": 0,
+        "qaBounceRatePct": 0,
+        "currentWipCount": 0,
+        "resolvedTickets": [],
+        "bouncedTickets": []
+      },
+      "bitbucket": {
+        "prsCreated": 28,
+        "prsMerged": 19,
+        "prsDeclined": 7,
+        "prsReviewed": 14,
+        "commits": 50,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": []
+    },
+    {
+      "identifier": "bruno.brito.ext@intive.com",
+      "displayName": "Bruno Brito de Jesus",
+      "email": "bruno.brito.ext@intive.com",
+      "jira": {
+        "resolvedCount": 0,
+        "resolvedByType": {
+          "story": 0,
+          "bug": 0,
+          "task": 0,
+          "other": 0
+        },
+        "totalInProgressHours": 0,
+        "avgInProgressHoursPerTicket": 0,
+        "totalInProgressFormatted": "0 h",
+        "avgInProgressFormatted": "0 h",
+        "qaBouncesCount": 0,
+        "ticketsPassedThroughQA": 0,
+        "qaBounceRatePct": 0,
+        "currentWipCount": 0,
+        "resolvedTickets": [],
+        "bouncedTickets": []
+      },
+      "bitbucket": {
+        "prsCreated": 21,
+        "prsMerged": 18,
+        "prsDeclined": 2,
+        "prsReviewed": 29,
+        "commits": 30,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": []
+    },
+    {
+      "identifier": "gustavo.ossio@intive.com",
+      "displayName": "Gustavo Adolfo Ossio Jimenez",
+      "email": "gustavo.ossio@intive.com",
+      "jira": {
+        "resolvedCount": 0,
+        "resolvedByType": {
+          "story": 0,
+          "bug": 0,
+          "task": 0,
+          "other": 0
+        },
+        "totalInProgressHours": 0,
+        "avgInProgressHoursPerTicket": 0,
+        "totalInProgressFormatted": "0 h",
+        "avgInProgressFormatted": "0 h",
+        "qaBouncesCount": 0,
+        "ticketsPassedThroughQA": 0,
+        "qaBounceRatePct": 0,
+        "currentWipCount": 0,
+        "resolvedTickets": [],
+        "bouncedTickets": []
+      },
+      "bitbucket": {
+        "prsCreated": 12,
+        "prsMerged": 12,
+        "prsDeclined": 0,
+        "prsReviewed": 12,
+        "commits": 46,
+        "linesAdded": 0,
+        "linesRemoved": 0,
+        "netLines": 0
+      },
+      "highlights": []
+    }
+  ]
+}

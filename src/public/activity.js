@@ -457,7 +457,19 @@
     const filtered = list.filter((pr) => {
       if (filter !== 'ALL' && pr.state !== filter) return false;
       if (!q) return true;
-      const haystack = [pr.title, pr.repositorySlug, pr.sourceBranch, pr.destinationBranch, String(pr.id)].join(' ').toLowerCase();
+      const reviewerNames = (pr.review?.reviewers || []).map((r) => r.displayName).join(' ');
+      const conflictTerms = pr.hasConflict ? 'conflict conflicted' : 'clean no conflict';
+      const approvalTerms = `${pr.review?.overall || ''} ${pr.review?.label || ''}`;
+      const haystack = [
+        pr.title,
+        pr.repositorySlug,
+        pr.sourceBranch,
+        pr.destinationBranch,
+        String(pr.id),
+        reviewerNames,
+        conflictTerms,
+        approvalTerms,
+      ].join(' ').toLowerCase();
       return haystack.includes(q);
     });
 
@@ -469,6 +481,11 @@
     elements.prsListContainer.innerHTML = filtered.map((pr) => {
       const stateClass = pr.state === 'MERGED' ? 'lozenge-merged' : (pr.state === 'DECLINED' ? 'lozenge-declined' : 'lozenge-open');
       const draftBadge = pr.draft ? '<span class="lozenge lozenge-draft" style="margin-left:6px;">Draft</span>' : '';
+      const conflictBadge = renderConflictBadge(pr);
+      const reviewedBadge = renderReviewedBadge(pr);
+      const approvalBadge = pr.review ? renderApprovalBadge(pr.review) : '';
+      const reviewersRow = renderReviewersRow(pr.review?.reviewers || []);
+
       return `
         <article class="pull-request">
           <div class="pull-request-main">
@@ -487,9 +504,13 @@
               <span aria-hidden="true">→</span>
               <span class="branch">${escapeHtml(pr.destinationBranch)}</span>
             </p>
+            ${reviewersRow}
           </div>
           <div class="pull-request-status">
             <span class="lozenge ${stateClass}">${escapeHtml(pr.state)}</span>
+            ${conflictBadge}
+            ${reviewedBadge}
+            ${approvalBadge}
             <span class="diffstat-badge">
               <span class="diffstat-add">+${formatNumber(pr.linesAdded)}</span>
               <span class="diffstat-del">-${formatNumber(pr.linesRemoved)}</span>
@@ -498,6 +519,127 @@
           </div>
         </article>`;
     }).join('');
+  }
+
+  function renderReviewedBadge(pr) {
+    if (pr.state && pr.state !== 'OPEN' && !pr.draft) {
+      return '';
+    }
+    if (pr.hasBeenReviewed) {
+      const label = pr.reviewStateLabel || 'Revisado';
+      return `<span class="lozenge review-has-review" title="Este PR ya recibió revisión o feedback: ${escapeHtml(label)}"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> <span>${escapeHtml(label)}</span></span>`;
+    }
+    return `<span class="lozenge review-unreviewed" title="Este PR aún no ha recibido revisión de ningún revisor"><i class="fa-regular fa-hourglass-half" aria-hidden="true"></i> <span>Sin review aún</span></span>`;
+  }
+
+  function renderConflictBadge(pr) {
+    if (pr.state && pr.state !== 'OPEN' && !pr.draft) {
+      return '';
+    }
+
+    if (pr.hasConflict) {
+      const conflictFiles = pr.conflict?.files || [];
+      const title = conflictFiles.length > 0
+        ? `Merge conflicts in: ${conflictFiles.slice(0, 3).join(', ')}${conflictFiles.length > 3 ? '...' : ''}`
+        : 'This pull request has merge conflicts that must be resolved';
+      const fileCountText = pr.conflict?.count > 1 ? ` (${pr.conflict.count})` : '';
+      return `<span class="lozenge lozenge-conflict" title="${escapeHtml(title)}"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> <span>Conflict${escapeHtml(fileCountText)}</span></span>`;
+    }
+
+    return `<span class="lozenge lozenge-clean" title="No merge conflicts detected between source and destination branches"><i class="fa-solid fa-code-merge" aria-hidden="true"></i> <span>No conflicts</span></span>`;
+  }
+
+  function renderApprovalBadge(review) {
+    if (!review) return '';
+    const overall = review.overall || 'no_reviewers';
+    const approvedCount = review.approvedCount || 0;
+    const reviewerCount = review.reviewerCount || 0;
+    const changesCount = review.changesRequestedCount || 0;
+
+    let icon = '';
+    let label = '';
+    let title = '';
+
+    if (overall === 'approved') {
+      icon = '<i class="fa-solid fa-circle-check" aria-hidden="true"></i>';
+      label = reviewerCount > 1 ? `Approved (${approvedCount}/${reviewerCount})` : 'Approved';
+      title = `Approved by ${approvedCount} of ${reviewerCount} reviewer${reviewerCount === 1 ? '' : 's'}`;
+    } else if (overall === 'partially_approved') {
+      icon = '<i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>';
+      label = `Partially approved (${approvedCount}/${reviewerCount})`;
+      title = `${approvedCount} of ${reviewerCount} reviewers approved. Awaiting remaining reviews.`;
+    } else if (overall === 'changes_requested') {
+      icon = '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>';
+      label = changesCount > 1 ? `Changes requested (${changesCount})` : 'Changes requested';
+      title = `${changesCount} reviewer${changesCount === 1 ? ' has' : 's have'} requested changes`;
+    } else if (overall === 'pending') {
+      icon = '<i class="fa-regular fa-clock" aria-hidden="true"></i>';
+      label = reviewerCount > 0 ? `Needs approval (0/${reviewerCount})` : 'Review pending';
+      title = `Awaiting review from ${reviewerCount} assigned reviewer${reviewerCount === 1 ? '' : 's'}`;
+    } else {
+      icon = '<i class="fa-solid fa-user-xmark" aria-hidden="true"></i>';
+      label = 'No reviewers';
+      title = 'No reviewers assigned to this pull request';
+    }
+
+    return `<span class="lozenge review-${escapeHtml(overall)}" title="${escapeHtml(title)}">${icon} <span>${escapeHtml(label)}</span></span>`;
+  }
+
+  function renderReviewersRow(reviewers) {
+    if (!reviewers || reviewers.length === 0) {
+      return `
+        <div class="pull-request-reviewers-row is-empty">
+          <span class="reviewers-label"><i class="fa-solid fa-users" aria-hidden="true"></i> Reviewers:</span>
+          <span class="no-reviewers-text">None assigned</span>
+        </div>`;
+    }
+
+    const chips = reviewers.map((reviewer) => {
+      const state = reviewer.state || 'pending';
+      let stateIcon = '';
+      let stateText = 'Pending';
+      let statusClass = 'is-pending';
+
+      if (state === 'approved') {
+        stateIcon = '<i class="fa-solid fa-check" aria-hidden="true"></i>';
+        stateText = 'Aprobó';
+        statusClass = 'is-approved';
+      } else if (state === 'changes_requested') {
+        stateIcon = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+        stateText = 'Cambios solicitados';
+        statusClass = 'is-changes-requested';
+      } else if (reviewer.hasParticipated) {
+        stateIcon = '<i class="fa-regular fa-comment-dots" aria-hidden="true"></i>';
+        stateText = 'Con comentarios';
+        statusClass = 'is-participated';
+      } else {
+        stateIcon = '<i class="fa-regular fa-clock" aria-hidden="true"></i>';
+        stateText = 'Sin revisar';
+        statusClass = 'is-pending';
+      }
+
+      const initials = (reviewer.displayName || 'Reviewer')
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0].toUpperCase())
+        .join('') || '?';
+
+      return `
+        <span class="reviewer-chip ${statusClass}" title="${escapeHtml(reviewer.displayName)}: ${stateText}">
+          <span class="chip-avatar">${escapeHtml(initials)}</span>
+          <span class="chip-name">${escapeHtml(reviewer.displayName)}</span>
+          <span class="chip-status">${stateIcon} ${escapeHtml(stateText)}</span>
+        </span>`;
+    }).join('');
+
+    return `
+      <div class="pull-request-reviewers-row">
+        <span class="reviewers-label"><i class="fa-solid fa-users" aria-hidden="true"></i> Reviewers:</span>
+        <div class="reviewer-chips-list">
+          ${chips}
+        </div>
+      </div>`;
   }
 
   function renderCommitsList(elements, viewState) {
